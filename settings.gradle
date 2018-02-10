@@ -1,0 +1,1 @@
+include ':app', ':BDVoiceLib', ':openCVLibrary330', ':Updatelibrary'
