@@ -23,18 +23,11 @@ import static com.dchip.door.smartdoorsdk.deviceControl.nativeLev.Pn512Lock.IO_L
 
 public class BoltLockHandler extends LockHandler {
     private static final String TAG = "BoltLockHandler";
-//    public static BoltLockHandler instance;
 
 
-//    public BoltLockHandler getInstance() {
-//        if (instance == null){
-//            instance = new BoltLockHandler();
-//        }
-//        return instance;
-//    }
 
     public  BoltLockHandler(){
-        setDefaultStatus(1,0,1,true);
+        setDefaultStatus(1,1,1,true);
     }
 
     @Override
