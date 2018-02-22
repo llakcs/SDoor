@@ -6,6 +6,7 @@ import com.dchip.door.smartdoorsdk.deviceControl.Listener.EaseAccountListner;
 import com.dchip.door.smartdoorsdk.deviceControl.Listener.HumanCheckListner;
 import com.dchip.door.smartdoorsdk.deviceControl.Listener.LockBreakListener;
 import com.dchip.door.smartdoorsdk.deviceControl.Listener.LockPushListener;
+import com.dchip.door.smartdoorsdk.deviceControl.Listener.LogStrListner;
 import com.dchip.door.smartdoorsdk.deviceControl.Listener.ServerstatusListner;
 import com.dchip.door.smartdoorsdk.deviceControl.Listener.ServiceOpenLockListner;
 import com.dchip.door.smartdoorsdk.deviceControl.Listener.UpdateOwenerListner;
@@ -90,6 +91,17 @@ public interface DeviceManager {
      * 注销 人体检测监听器
      */
     void unRegHumanCheckListner();
+
+    /**'
+     * 输出打印内容
+     * @param logStrListner
+     */
+    void setLogStrListner(LogStrListner logStrListner);
+
+    /**
+     * 注销打印接口
+     */
+    void unRegLogStrListner();
 
     /**
      * 注册 户主信息更变监听器

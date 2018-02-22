@@ -25,6 +25,7 @@ import com.dchip.door.smartdoorsdk.deviceControl.Listener.EaseAccountListner;
 import com.dchip.door.smartdoorsdk.deviceControl.Listener.HumanCheckListner;
 import com.dchip.door.smartdoorsdk.deviceControl.Listener.LockBreakListener;
 import com.dchip.door.smartdoorsdk.deviceControl.Listener.LockPushListener;
+import com.dchip.door.smartdoorsdk.deviceControl.Listener.LogStrListner;
 import com.dchip.door.smartdoorsdk.deviceControl.Listener.ServerstatusListner;
 import com.dchip.door.smartdoorsdk.deviceControl.Listener.ServiceOpenLockListner;
 import com.dchip.door.smartdoorsdk.deviceControl.Listener.onPhotoTakenListener;
@@ -43,6 +44,7 @@ import com.dchip.door.smartdoorsdk.deviceControl.interfaces.LockHandler;
 import com.dchip.door.smartdoorsdk.event.BroadcastEvent;
 import com.dchip.door.smartdoorsdk.event.FaultEvent;
 import com.dchip.door.smartdoorsdk.event.DeviceCheckEvent;
+import com.dchip.door.smartdoorsdk.event.LogEvent;
 import com.dchip.door.smartdoorsdk.event.OpenLockRecallEvent;
 import com.dchip.door.smartdoorsdk.event.OpenLockStatusEvent;
 import com.dchip.door.smartdoorsdk.event.PhotoTakenEvent;
@@ -127,6 +129,7 @@ public class DeviceImpl implements DeviceManager {
     private ServerstatusListner mServerstatusListner;
     private EaseAccountListner easeAccountListner;
     private onPhotoTakenListener photoTakenListener;
+    private LogStrListner mlogStrListner;
     private boolean enableLed = false;
     private boolean enableSteer = false;
     private boolean enableLock = false;
@@ -921,6 +924,27 @@ public class DeviceImpl implements DeviceManager {
         }
 
     };
+
+
+    @Override
+    public void setLogStrListner(LogStrListner logStrListner) {
+          this.mlogStrListner = logStrListner;
+    }
+
+    @Override
+    public void unRegLogStrListner() {
+        if(mlogStrListner != null){
+            this.mlogStrListner = null;
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void LogEvent(LogEvent logEvent){
+        if(mlogStrListner != null)
+            mlogStrListner.resultStr(logEvent.getLogtag(),logEvent.getLogstr());
+    }
+
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void UpdateConfigEvent(UpdateConfigEvent updateConfigEvent){

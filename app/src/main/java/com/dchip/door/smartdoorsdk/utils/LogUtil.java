@@ -2,6 +2,10 @@ package com.dchip.door.smartdoorsdk.utils;
 
 import android.util.Log;
 
+import com.dchip.door.smartdoorsdk.event.LogEvent;
+
+import org.greenrobot.eventbus.EventBus;
+
 /**
  * Created by jelly on 2017/9/20.
  */
@@ -35,6 +39,7 @@ public class LogUtil {
         }
         if(level<=DEBUG)
             Log.d(tag,msg);
+        EventBus.getDefault().post(new LogEvent(msg,tag));
     }
     public static void i(String tag,String msg){
         if(msg==null)  {
