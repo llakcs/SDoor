@@ -39,7 +39,7 @@ public class LogUtil {
         }
         if(level<=DEBUG)
             Log.d(tag,msg);
-        EventBus.getDefault().post(new LogEvent(msg,tag));
+        EventBus.getDefault().post(new LogEvent(msg,tag,"d"));
     }
     public static void i(String tag,String msg){
         if(msg==null)  {
@@ -64,6 +64,7 @@ public class LogUtil {
         }
         if(level<=ERROR)
             Log.e(tag,msg);
+        EventBus.getDefault().post(new LogEvent(msg,tag,"e"));
     }
     public static void e(String tag,String msg,Exception e){
         if(msg==null) {

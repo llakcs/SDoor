@@ -8,10 +8,12 @@ public class LogEvent {
 
     private String logstr;
     private String logtag;
+    private String level;
 
-    public LogEvent(String logstr, String logtag) {
+    public LogEvent(String logstr, String logtag, String level) {
         this.logstr = logstr;
         this.logtag = logtag;
+        this.level = level;
     }
 
     public String getLogstr() {
@@ -28,5 +30,13 @@ public class LogEvent {
 
     public void setLogtag(String logtag) {
         this.logtag = logtag;
+    }
+
+    public String getLevel() {
+        return level;
+    }
+
+    public void setLevel(String level) {
+        this.level = level;
     }
 }
