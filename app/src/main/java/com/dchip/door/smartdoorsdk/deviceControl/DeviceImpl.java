@@ -48,6 +48,7 @@ import com.dchip.door.smartdoorsdk.event.OpenLockStatusEvent;
 import com.dchip.door.smartdoorsdk.event.PhotoTakenEvent;
 import com.dchip.door.smartdoorsdk.event.ReadCardEven;
 import com.dchip.door.smartdoorsdk.event.ServiceEvent;
+import com.dchip.door.smartdoorsdk.event.UpdateConfigEvent;
 import com.dchip.door.smartdoorsdk.http.ApiCallBack;
 import com.dchip.door.smartdoorsdk.receiver.ACBroadcastReceiver;
 import com.dchip.door.smartdoorsdk.s;
@@ -920,6 +921,13 @@ public class DeviceImpl implements DeviceManager {
         }
 
     };
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void UpdateConfigEvent(UpdateConfigEvent updateConfigEvent){
+        controlhandler.post(getDeviceConfigRunnable);
+    }
+
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onOpenLockRecallEvent(OpenLockRecallEvent openLockRecallEvent) {

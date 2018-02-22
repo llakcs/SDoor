@@ -13,6 +13,7 @@ import com.dchip.door.smartdoorsdk.Bean.OperationModel;
 import com.dchip.door.smartdoorsdk.event.OpenLockRecallEvent;
 import com.dchip.door.smartdoorsdk.event.OpenLockStatusEvent;
 import com.dchip.door.smartdoorsdk.event.ServiceEvent;
+import com.dchip.door.smartdoorsdk.event.UpdateConfigEvent;
 import com.dchip.door.smartdoorsdk.s;
 import com.dchip.door.smartdoorsdk.utils.Constant;
 import com.dchip.door.smartdoorsdk.utils.DPDB;
@@ -195,6 +196,10 @@ public class ACWebSocketService extends Service {
                         }
 
                         break;
+                    }
+                    case 100:{
+                        //100更新配置信息
+                        EventBus.getDefault().post(new UpdateConfigEvent(100));
                     }
                     case 98: {
                         //后台推送新版本
