@@ -199,6 +199,7 @@ public class ACWebSocketService extends Service {
                     }
                     case 100:{
                         //100更新配置信息
+                        LogUtil.e(TAG, "###case 100");
                         EventBus.getDefault().post(new UpdateConfigEvent(100));
                     }
                     case 98: {
