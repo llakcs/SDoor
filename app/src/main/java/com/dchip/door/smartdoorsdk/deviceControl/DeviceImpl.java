@@ -929,11 +929,13 @@ public class DeviceImpl implements DeviceManager {
     @Override
     public void setLogStrListner(LogStrListner logStrListner) {
           this.mlogStrListner = logStrListner;
+          isRegLog = true;
     }
 
     @Override
     public void unRegLogStrListner() {
         if(mlogStrListner != null){
+            isRegLog = false;
             this.mlogStrListner = null;
         }
     }
@@ -941,11 +943,9 @@ public class DeviceImpl implements DeviceManager {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void LogEvent(LogEvent logEvent){
         if(mlogStrListner != null) {
-            isRegLog = true;
+
             LogUtil.e(TAG, "###logEvent.getLog");
             mlogStrListner.resultStr(logEvent.getLogtag(), logEvent.getLogstr());
-        }else{
-            isRegLog = false;
         }
     }
 
