@@ -924,6 +924,7 @@ public class DeviceImpl implements DeviceManager {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void UpdateConfigEvent(UpdateConfigEvent updateConfigEvent){
+        LogUtil.e(TAG, "###UpdateConfigEvent ");
         controlhandler.post(getDeviceConfigRunnable);
     }
 
