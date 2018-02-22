@@ -2,6 +2,7 @@ package com.dchip.door.smartdoorsdk.utils;
 
 import android.util.Log;
 
+import com.dchip.door.smartdoorsdk.deviceControl.DeviceImpl;
 import com.dchip.door.smartdoorsdk.event.LogEvent;
 
 import org.greenrobot.eventbus.EventBus;
@@ -39,7 +40,12 @@ public class LogUtil {
         }
         if(level<=DEBUG)
             Log.d(tag,msg);
-        EventBus.getDefault().post(new LogEvent(msg,tag,"d"));
+        if(DeviceImpl.isRegLog) {
+            EventBus.getDefault().post(new LogEvent(msg, tag, "d"));
+            try {
+                Thread.sleep(500);
+            }catch (Exception e){}
+        }
     }
     public static void i(String tag,String msg){
         if(msg==null)  {
@@ -64,7 +70,12 @@ public class LogUtil {
         }
         if(level<=ERROR)
             Log.e(tag,msg);
-        EventBus.getDefault().post(new LogEvent(msg,tag,"e"));
+        if(DeviceImpl.isRegLog) {
+            EventBus.getDefault().post(new LogEvent(msg, tag, "e"));
+            try {
+                Thread.sleep(500);
+            }catch (Exception e){}
+        }
     }
     public static void e(String tag,String msg,Exception e){
         if(msg==null) {

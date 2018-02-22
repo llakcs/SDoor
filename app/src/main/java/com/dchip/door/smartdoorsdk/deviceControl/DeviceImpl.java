@@ -136,7 +136,7 @@ public class DeviceImpl implements DeviceManager {
     private boolean enableTakePhoto = false;
     private int GET_AD_TIME = 1;
     private int AdvType = 1;
-
+    public static  boolean isRegLog = false;
     private DeviceImpl() {
 
     }
@@ -940,9 +940,13 @@ public class DeviceImpl implements DeviceManager {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void LogEvent(LogEvent logEvent){
-        if(mlogStrListner != null)
-            LogUtil.e(TAG,"###logEvent.getLog");
-            mlogStrListner.resultStr(logEvent.getLogtag(),logEvent.getLogstr());
+        if(mlogStrListner != null) {
+            isRegLog = true;
+            LogUtil.e(TAG, "###logEvent.getLog");
+            mlogStrListner.resultStr(logEvent.getLogtag(), logEvent.getLogstr());
+        }else{
+            isRegLog = false;
+        }
     }
 
 
