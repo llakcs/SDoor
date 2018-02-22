@@ -137,7 +137,6 @@ public class DeviceImpl implements DeviceManager {
     private int AdvType = 1;
 
     private DeviceImpl() {
-
     }
 
     public static void registerInstance() {
@@ -156,7 +155,6 @@ public class DeviceImpl implements DeviceManager {
         this.mLockHandler = lock;
         mLockHandler.closeLock();
     }
-
     @Override
     public DeviceManager init(Activity activity, int appTypeNum) {
         controlhandler = new Handler();
@@ -272,13 +270,6 @@ public class DeviceImpl implements DeviceManager {
 
             @Override
             public void onOneDay() {
-//                new Thread(new Runnable() {
-//                    @Override
-//                    public void run() {
-////                        showMsg("test ----- 每天打印");
-//
-//                    }
-//                }).start();
                 controlhandler.postDelayed(upload4GFlow, 500);
             }
 
