@@ -940,7 +940,9 @@ public class DeviceImpl implements DeviceManager {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void LogEvent(LogEvent logEvent){
+        LogUtil.e(TAG,"###logEvent");
         if(mlogStrListner != null)
+            LogUtil.e(TAG,"###logEvent.getLog");
             mlogStrListner.resultStr(logEvent.getLogtag(),logEvent.getLogstr());
     }
 
