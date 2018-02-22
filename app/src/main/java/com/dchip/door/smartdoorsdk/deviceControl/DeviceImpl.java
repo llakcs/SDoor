@@ -44,7 +44,6 @@ import com.dchip.door.smartdoorsdk.deviceControl.interfaces.LockHandler;
 import com.dchip.door.smartdoorsdk.event.BroadcastEvent;
 import com.dchip.door.smartdoorsdk.event.FaultEvent;
 import com.dchip.door.smartdoorsdk.event.DeviceCheckEvent;
-import com.dchip.door.smartdoorsdk.event.LogEvent;
 import com.dchip.door.smartdoorsdk.event.OpenLockRecallEvent;
 import com.dchip.door.smartdoorsdk.event.OpenLockStatusEvent;
 import com.dchip.door.smartdoorsdk.event.PhotoTakenEvent;
@@ -136,7 +135,7 @@ public class DeviceImpl implements DeviceManager {
     private boolean enableTakePhoto = false;
     private int GET_AD_TIME = 1;
     private int AdvType = 1;
-    public static  boolean isRegLog = false;
+
     private DeviceImpl() {
 
     }
@@ -190,6 +189,13 @@ public class DeviceImpl implements DeviceManager {
         return instance;
     }
 
+    @Override
+    public void showMsg(String tag, String msg) {
+        if(mlogStrListner != null) {
+            LogUtil.e(TAG, "###showmsg");
+            mlogStrListner.resultStr(tag, msg);
+        }
+    }
 
     @Override
     public DeviceManager EnableCardReader() {
@@ -929,25 +935,15 @@ public class DeviceImpl implements DeviceManager {
     @Override
     public void setLogStrListner(LogStrListner logStrListner) {
           this.mlogStrListner = logStrListner;
-          isRegLog = true;
     }
 
     @Override
     public void unRegLogStrListner() {
         if(mlogStrListner != null){
-            isRegLog = false;
             this.mlogStrListner = null;
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void LogEvent(LogEvent logEvent){
-        if(mlogStrListner != null) {
-
-            LogUtil.e(TAG, "###logEvent.getLog");
-            mlogStrListner.resultStr(logEvent.getLogtag(), logEvent.getLogstr());
-        }
-    }
 
 
 

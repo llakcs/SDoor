@@ -88,6 +88,13 @@ public interface DeviceManager {
     DeviceManager setHumanCheckListner(HumanCheckListner humanCheckListner);
 
     /**
+     * 系统日志打印
+     * @param tag
+     * @param msg
+     */
+    void showMsg(String tag,String msg);
+
+    /**
      * 注销 人体检测监听器
      */
     void unRegHumanCheckListner();
