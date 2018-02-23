@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.dchip.door.smartdoorsdk.deviceControl.interfaces.LockHandler;
 import com.dchip.door.smartdoorsdk.event.FaultEvent;
+import com.dchip.door.smartdoorsdk.s;
 import com.dchip.door.smartdoorsdk.utils.LogUtil;
 
 import org.greenrobot.eventbus.EventBus;
@@ -78,9 +79,11 @@ public class BoltLockHandler extends LockHandler {
 
         if (checkLock() == inv(OPEN_LOCK)) {
 //        if (checkLock() == getIntFromCommend(!OPEN_LOCK)) {
+            s.device().showMsg(TAG,"未开锁，开门异常报警。 门号:" + doorNum + 1);
             LogUtil.d(TAG,"未开锁，开门异常报警。 门号:" + doorNum + 1);
             EventBus.getDefault().post(new FaultEvent(1));
         } else {
+            s.device().showMsg(TAG,"检测到开门");
             LogUtil.d(TAG,"检测到开门");
             Timer timer = new Timer();
             timer.schedule(new TimerTask() {
@@ -90,6 +93,7 @@ public class BoltLockHandler extends LockHandler {
 //                    Log.d(TAG, "opened door counting " + SecCounter);
                     if (checkDoor(doorNum) == OPEN_DOOR) {
                         if (SecCounter > DOOR_LOGN_OPEN_TIMEOUT) {
+                            s.device().showMsg(TAG,"已开锁，开长开 异常报警。 门号:"+ doorNum + 1);
                             LogUtil.e(TAG,"已开锁，开长开 异常报警。 门号:" + doorNum + 1);
                             EventBus.getDefault().post(new FaultEvent(4));
                             SecCounter = 0;
@@ -129,14 +133,18 @@ public class BoltLockHandler extends LockHandler {
         }
 
         LogUtil.d(TAG,"检测到关门");
-        if(isDebugable) {LogUtil.d(TAG, "onDoorClose() doorNum=" + doorNum+" open:="+(checkDoor(doorNum)==OPEN_DOOR));}
+        if(isDebugable) {
+            s.device().showMsg(TAG,"onDoorClose() doorNum=" + doorNum+" open:="+(checkDoor(doorNum)==OPEN_DOOR));
+            LogUtil.d(TAG, "onDoorClose() doorNum=" + doorNum+" open:="+(checkDoor(doorNum)==OPEN_DOOR));}
         Timer timer = new Timer();
 
         timer.schedule(new TimerTask() {
             int HalfSecCounter = 0;
 
             public void run() {
-                if(isDebugable) {LogUtil.d(TAG, "count:" + HalfSecCounter+" isSingleLock:"+isSingleLock+" 0_open:"+(checkDoor(0)==OPEN_DOOR)+" 1_open:"+(checkDoor(1)==OPEN_DOOR));}
+                if(isDebugable) {
+                    s.device().showMsg(TAG,"count:" + HalfSecCounter+" isSingleLock:"+isSingleLock+" 0_open:"+(checkDoor(0)==OPEN_DOOR)+" 1_open:"+(checkDoor(1)==OPEN_DOOR));
+                    LogUtil.d(TAG, "count:" + HalfSecCounter+" isSingleLock:"+isSingleLock+" 0_open:"+(checkDoor(0)==OPEN_DOOR)+" 1_open:"+(checkDoor(1)==OPEN_DOOR));}
                 if (isSingleLock && checkDoor(doorNum) == inv(OPEN_DOOR)
                         ||  !isSingleLock && checkDoor(0) == inv(OPEN_DOOR) && checkDoor(1) == inv(OPEN_DOOR)) {
                     if (HalfSecCounter > LOCK_CLOSE_TIMEOUT * 2) {

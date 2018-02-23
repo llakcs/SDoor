@@ -4,6 +4,7 @@ import android.util.Log;
 
 
 import com.dchip.door.smartdoorsdk.deviceControl.nativeLev.Pn512Lock;
+import com.dchip.door.smartdoorsdk.s;
 
 import java.util.Timer;
 import java.util.TimerTask;

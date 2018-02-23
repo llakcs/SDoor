@@ -37,7 +37,6 @@ public class LogUtil {
         }
         if(level<=DEBUG)
             Log.d(tag,msg);
-        s.device().showMsg(tag,msg);
     }
     public static void i(String tag,String msg){
         if(msg==null)  {
@@ -62,7 +61,6 @@ public class LogUtil {
         }
         if(level<=ERROR)
             Log.e(tag,msg);
-        s.device().showMsg(tag,msg);
     }
     public static void e(String tag,String msg,Exception e){
         if(msg==null) {

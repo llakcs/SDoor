@@ -191,12 +191,12 @@ public class DeviceImpl implements DeviceManager {
     public void showMsg(String tag, String msg) {
         if(mlogStrListner != null) {
             LogUtil.e(TAG, "###showmsg");
-            mlogStrListner.resultStr(tag, msg);
             try{
                 Thread.sleep(1000);
             }catch (Exception e){
                 e.printStackTrace();
             }
+            mlogStrListner.resultStr(tag, msg);
         }
     }
 
