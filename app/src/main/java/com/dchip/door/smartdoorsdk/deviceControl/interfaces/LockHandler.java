@@ -22,7 +22,7 @@ import static com.dchip.door.smartdoorsdk.deviceControl.nativeLev.Pn512Lock.IO_L
 public abstract class LockHandler {
     public static final String TAG = "LockHandler";
     protected static boolean isSingleLock = true;
-    protected static boolean isDebugable = true;
+    protected static boolean isDebugable = false;
     protected static boolean isLongOpen = false;
     protected static int OPEN_LOCK = 1;
     protected static int OPEN_DOOR = 1;
