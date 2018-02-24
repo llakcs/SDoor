@@ -181,10 +181,6 @@ public class ACWebSocketService extends Service {
                                 startService(new Intent(getApplicationContext(),TakePhotoService.class));
                                 break;
                             case 6://视频对讲开锁
-                                if (s.device().getAppType() != 9){
-                                    startService(new Intent(getApplicationContext(),TakePhotoService.class));
-                                }
-                                break;
                             case 5://人脸识别
                             default:
                                 break;
