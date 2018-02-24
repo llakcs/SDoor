@@ -238,6 +238,11 @@ public class DeviceImpl implements DeviceManager {
         return instance;
     }
 
+    @Override
+    public int getAppType() {
+        return appType;
+    }
+
     int adcount = 0;
 
     @Override

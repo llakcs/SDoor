@@ -275,4 +275,11 @@ public interface DeviceManager {
      */
     DeviceManager EnableTakePhoto();
 
+    /**
+     * 获取app 类型app 0-手机 1-android终端&普通版本 2-qt 5-android终端&十寸屏(人脸，视频对讲) 6-android终端&十寸屏(视频对讲) 7-android终端&十五寸屏(16:9) 8-android终端&十五寸屏(4:3) 9-支持暗盒版本
+     *
+     * @return the device
+     */
+    int getAppType();
+
 }

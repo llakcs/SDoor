@@ -52,7 +52,7 @@ public class ACWebSocketService extends Service {
     /**
      * 心跳的间隔时间
      */
-    private int HEART_INTERVAL = 5000;
+    private int HEART_INTERVAL = 10 * 1000;
 
     /**
      * 服务器回应间隔时间
@@ -172,6 +172,23 @@ public class ACWebSocketService extends Service {
                 switch(operationModel.getType()) {
                     case 1: {
                         //1为开锁信息
+                        switch (operationModel.getOpenWay()){
+                            case 1://手机
+                            case 2://刷卡
+                            case 3://手环
+                            case 4://扫码
+                                startService(new Intent(getApplicationContext(),TakePhotoService.class));
+                                break;
+                            case 6://视频对讲开锁
+                                if (s.device().getAppType() != 9){
+                                    startService(new Intent(getApplicationContext(),TakePhotoService.class));
+                                }
+                                break;
+                            case 5://人脸识别
+                            default:
+                                break;
+                        }
+
                         if (s.device().getLock()!=null) {
                             int ret = s.device().getLock().openLock();
                             LogUtil.e(TAG, "###ACWEBSOKCET.ret =" + ret + " // MainActivity.uid =" + DPDB.getUid());

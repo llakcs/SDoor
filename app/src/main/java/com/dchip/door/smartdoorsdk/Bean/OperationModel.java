@@ -15,6 +15,7 @@ public class OperationModel {
     private int updateType;
     private boolean unTerminal;
     private boolean ownerInfoUnTerminal;
+    private int openWay = -1;
 
     public boolean isOwnerInfoUnTerminal() {
         return ownerInfoUnTerminal;
@@ -86,5 +87,13 @@ public class OperationModel {
 
     public void setUpdateType(int updateType) {
         this.updateType = updateType;
+    }
+
+    public int getOpenWay() {
+        return openWay;
+    }
+
+    public void setOpenWay(int openWay) {
+        this.openWay = openWay;
     }
 }
