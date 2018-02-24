@@ -171,6 +171,7 @@ public class ACWebSocketService extends Service {
                 OperationModel operationModel = new Gson().fromJson(payload, OperationModel.class);
                 switch(operationModel.getType()) {
                     case 1: {
+                        LogUtil.d(TAG, "接收到开锁socket：" + payload);
                         //1为开锁信息
                         switch (operationModel.getOpenWay()){
                             case 1://手机
