@@ -23,6 +23,7 @@ import com.dchip.door.smartdoorsdk.utils.LogUtil;
 import com.dchip.door.smartdoorsdk.utils.ShellUtil;
 import com.google.gson.Gson;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -187,7 +188,9 @@ public class ACWebSocketService extends Service {
                                 case 3://手环
                                 case 4://扫码
                                     Intent i = new Intent(getApplicationContext(), TakePhotoService.class);
-                                    i.putExtra("path",Constant.VIDEOPATH);
+                                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss_SSS");
+                                    String fileneme = com.dchip.door.smartdoorsdk.utils.Constant.VIST_PHOTO_PATH + sdf.format(System.currentTimeMillis()) + ".jpg";
+                                    i.putExtra("path",fileneme);
                                     startService(i);
                                     break;
                                 case 6://视频对讲开锁
@@ -216,7 +219,9 @@ public class ACWebSocketService extends Service {
                             case 3://手环
                             case 4://扫码
                                 Intent i = new Intent(getApplicationContext(), TakePhotoService.class);
-                                i.putExtra("path",Constant.VIDEOPATH);
+                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss_SSS");
+                                String fileneme = com.dchip.door.smartdoorsdk.utils.Constant.VIST_PHOTO_PATH + sdf.format(System.currentTimeMillis()) + ".jpg";
+                                i.putExtra("path",fileneme);
                                 startService(i);
                                 break;
                             case 6://视频对讲开锁
