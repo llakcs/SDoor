@@ -155,6 +155,8 @@ public class TakePhotoService extends Service implements SurfaceHolder.Callback 
                             connected = true;
                         } catch (RuntimeException e) {
                             Log.e(TAG, "Camera #" + camIdx + "failed to open: " + e.getLocalizedMessage());
+                            mCamera = null;
+                            stopSelf();
                         }
                         if (connected) break;
                     }
