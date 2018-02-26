@@ -186,7 +186,9 @@ public class ACWebSocketService extends Service {
                                 case 2://刷卡
                                 case 3://手环
                                 case 4://扫码
-                                    startService(new Intent(getApplicationContext(), TakePhotoService.class));
+                                    Intent i = new Intent(getApplicationContext(), TakePhotoService.class);
+                                    i.putExtra("path",Constant.VIDEOPATH);
+                                    startService(i);
                                     break;
                                 case 6://视频对讲开锁
                                 case 5://人脸识别
@@ -213,7 +215,9 @@ public class ACWebSocketService extends Service {
                             case 2://刷卡
                             case 3://手环
                             case 4://扫码
-                                startService(new Intent(getApplicationContext(), TakePhotoService.class));
+                                Intent i = new Intent(getApplicationContext(), TakePhotoService.class);
+                                i.putExtra("path",Constant.VIDEOPATH);
+                                startService(i);
                                 break;
                             case 6://视频对讲开锁
                             case 5://人脸识别
