@@ -166,9 +166,11 @@ public class ACWebSocketService extends Service {
 
         @Override
         public void onTextMessage(String payload) {
-            //  LogUtil.e(TAG, "接受：" + payload);
             try {
                 OperationModel operationModel = new Gson().fromJson(payload, OperationModel.class);
+                if (operationModel.getType() != 99) {
+                    LogUtil.e(TAG, "websocket 接收：" + payload);
+                }
                 switch(operationModel.getType()) {
                     case 1: {
                         LogUtil.d(TAG, "接收到开锁socket：" + payload);
