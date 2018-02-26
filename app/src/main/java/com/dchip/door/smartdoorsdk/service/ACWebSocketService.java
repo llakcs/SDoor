@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+
 import com.dchip.door.smartdoorsdk.Bean.CardsModel;
 import com.dchip.door.smartdoorsdk.Bean.DoorOperationModel;
 import com.dchip.door.smartdoorsdk.Bean.HeartBeatModel;
@@ -21,10 +22,13 @@ import com.dchip.door.smartdoorsdk.utils.FileHelper;
 import com.dchip.door.smartdoorsdk.utils.LogUtil;
 import com.dchip.door.smartdoorsdk.utils.ShellUtil;
 import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import de.tavendo.autobahn.WebSocketConnection;
 import de.tavendo.autobahn.WebSocketHandler;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -57,7 +61,7 @@ public class ACWebSocketService extends Service {
     /**
      * 服务器回应间隔时间
      */
-    private final int INTERVAL_DISCONNECT = 10*1000;
+    private final int INTERVAL_DISCONNECT = 10 * 1000;
 
     /**
      * 长链接操作类
@@ -117,7 +121,7 @@ public class ACWebSocketService extends Service {
 //            mac = android.os.Build.SERIAL;
 //        }
         wsStatus = WS_STATUS_CONNECTING;
-        String wsUri = String.format(Constant.WS_URI, DPDB.getwsUrl() + mac );//+ "000000"
+        String wsUri = String.format(Constant.WS_URI, DPDB.getwsUrl() + mac);//+ "000000"
         // LogUtil.e(TAG, "Status: Connecting to " + wsUri);
         mConnection = new WebSocketConnection();
         try {
@@ -125,9 +129,9 @@ public class ACWebSocketService extends Service {
         } catch (Exception e) {
             disconnectAC();
             //LogUtil.e(TAG, e.toString());
-            EventBus.getDefault().post(new ServiceEvent(false,ServiceEvent.TIMEOUT));
+            EventBus.getDefault().post(new ServiceEvent(false, ServiceEvent.TIMEOUT));
             DPDB.setServiceconn(false);
-            LogUtil.e(TAG,"长链接连接出错" + e.toString());
+            LogUtil.e(TAG, "长链接连接出错" + e.toString());
             wsStatus = WS_STATUS_CONNECT_ERROR;
         }
 
@@ -145,12 +149,13 @@ public class ACWebSocketService extends Service {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onOpenLockEvent(OpenLockStatusEvent event) {
         if (mConnection != null && mConnection.isConnected()) {
-            LogUtil.d(TAG,"发送开锁成功数据");
-            String domsg = new Gson().toJson(new DoorOperationModel(event.getUid(),event.isStatus(), event.getType()));
-            LogUtil.e(TAG, "###"+domsg);
+            LogUtil.d(TAG, "发送开锁成功数据");
+            String domsg = new Gson().toJson(new DoorOperationModel(event.getUid(), event.isStatus(), event.getType()));
+            LogUtil.e(TAG, "###" + domsg);
             mConnection.sendTextMessage(domsg);
         }
     }
+
     /**
      * 处理交互的数据
      */
@@ -169,51 +174,67 @@ public class ACWebSocketService extends Service {
             try {
                 OperationModel operationModel = new Gson().fromJson(payload, OperationModel.class);
                 if (operationModel.getType() != 99) {
-                    LogUtil.e(TAG, "websocket 接收：" + payload);
+                    LogUtil.i(TAG, "websocket 接收：" + payload);
                 }
-                switch(operationModel.getType()) {
+                switch (operationModel.getType()) {
                     case 1: {
                         LogUtil.d(TAG, "接收到开锁socket：" + payload);
                         //1为开锁信息
-                        switch (operationModel.getOpenWay()){
+                        if (s.device().getLock() != null) {
+                            switch (operationModel.getOpenWay()) {
+                                case 1://手机
+                                case 2://刷卡
+                                case 3://手环
+                                case 4://扫码
+                                    startService(new Intent(getApplicationContext(), TakePhotoService.class));
+                                    break;
+                                case 6://视频对讲开锁
+                                case 5://人脸识别
+                                default:
+                                    break;
+                            }
+                            int ret = s.device().getLock().openLock();
+                            LogUtil.e(TAG, "###ACWEBSOKCET.ret =" + ret + " // MainActivity.uid =" + DPDB.getUid());
+                            if (ret == 1) {
+                                EventBus.getDefault().post(new OpenLockStatusEvent(DPDB.getUid(), true));
+                                EventBus.getDefault().post(new OpenLockRecallEvent(operationModel.getOpenWay()));
+                            } else {
+                                LogUtil.d(TAG, "开锁出错 err:" + ret);
+                            }
+                        } else
+                            LogUtil.e(TAG, "getLock() == null");
+                        break;
+                    }
+                    case 11: {
+                        LogUtil.d(TAG, "接收到暗盒开锁 socket：" + payload);
+                        //1为开锁信息
+                        switch (operationModel.getOpenWay()) {
                             case 1://手机
                             case 2://刷卡
                             case 3://手环
                             case 4://扫码
-                                startService(new Intent(getApplicationContext(),TakePhotoService.class));
+                                startService(new Intent(getApplicationContext(), TakePhotoService.class));
                                 break;
                             case 6://视频对讲开锁
                             case 5://人脸识别
                             default:
                                 break;
                         }
-
-                        if (s.device().getLock()!=null) {
-                            int ret = s.device().getLock().openLock();
-                            LogUtil.e(TAG, "###ACWEBSOKCET.ret =" + ret + " // MainActivity.uid =" + DPDB.getUid());
-                            if (ret == 1) {
-                                EventBus.getDefault().post(new OpenLockStatusEvent(DPDB.getUid(), true));
-                                EventBus.getDefault().post(new OpenLockRecallEvent());
-                            } else {
-                                LogUtil.d(TAG, "开锁出错 err:" + ret);
-                            }
-                        }else
-                            LogUtil.e(TAG, "getLock() == null");
-                        break;
                     }
+                    break;
                     case 99: {
                         //99为心跳返回信息
                         networkChekTime = System.currentTimeMillis();
-                        LogUtil.v(TAG,"收到服务器的心跳回复：" + operationModel.getTime());
+                        LogUtil.v(TAG, "收到服务器的心跳回复：" + operationModel.getTime());
 //                        EventBus.getDefault().post(new InfoEvent("收到服务器的心跳回复：" + operationModel.getTime()));
-                        EventBus.getDefault().post(new ServiceEvent(HEART_BEAT,operationModel.isUnTerminal(),operationModel.isOwnerInfoUnTerminal()));
+                        EventBus.getDefault().post(new ServiceEvent(HEART_BEAT, operationModel.isUnTerminal(), operationModel.isOwnerInfoUnTerminal()));
                         if (operationModel.isOffline()) {
                             disconnectAC();
                         }
 
                         break;
                     }
-                    case 100:{
+                    case 100: {
                         //100更新配置信息
                         LogUtil.e(TAG, "###case 100");
                         EventBus.getDefault().post(new UpdateConfigEvent(100));
@@ -226,14 +247,14 @@ public class ACWebSocketService extends Service {
                     case 95: {
                         //后台推送卡列表
                         List<CardsModel> cards = operationModel.getUserCardList();
-                        LogUtil.d(TAG,"后台推送卡列表 " + cards.size()+"条信息");
+                        LogUtil.d(TAG, "后台推送卡列表 " + cards.size() + "条信息");
                         ArrayList writeCards = new ArrayList<String>();
-                        for (int i = 0 ;i<cards.size();i++) {
-                            LogUtil.d(TAG,(i+1) + " cardId:" + cards.get(i).getCardId()+" id:"+cards.get(i).getId());
-                            writeCards.add(cards.get(i).getCardId()+"/"+cards.get(i).getId());
+                        for (int i = 0; i < cards.size(); i++) {
+                            LogUtil.d(TAG, (i + 1) + " cardId:" + cards.get(i).getCardId() + " id:" + cards.get(i).getId());
+                            writeCards.add(cards.get(i).getCardId() + "/" + cards.get(i).getId());
                         }
-                        boolean writeOK = FileHelper.writeByFileOutputStream(Constant.CARDS_FILE_PATH,writeCards);
-                        ServiceEvent se = new ServiceEvent(true,ServiceEvent.UPDATE_CARD_LIST);
+                        boolean writeOK = FileHelper.writeByFileOutputStream(Constant.CARDS_FILE_PATH, writeCards);
+                        ServiceEvent se = new ServiceEvent(true, ServiceEvent.UPDATE_CARD_LIST);
                         se.setList(writeCards);
                         se.setWriteCardSuccess(writeOK);
                         EventBus.getDefault().post(se);
@@ -250,9 +271,9 @@ public class ACWebSocketService extends Service {
         @Override
         public void onClose(int code, String reason) {
             //LogUtil.e(TAG, "服务器连接中断:原因" + reason);
-            EventBus.getDefault().post(new ServiceEvent(false,ServiceEvent.DISCONNECTED));
+            EventBus.getDefault().post(new ServiceEvent(false, ServiceEvent.DISCONNECTED));
             disconnectAC();
-            LogUtil.e(TAG,"服务器连接中断：原因" + reason);
+            LogUtil.e(TAG, "服务器连接中断：原因" + reason);
             wsStatus = WS_STATUS_CLOSED;
 
         }
@@ -312,9 +333,9 @@ public class ACWebSocketService extends Service {
 
                     if (time - networkChekTime > INTERVAL_DISCONNECT) {
                         //等待回复时间内没有收到服务器的信息，认定为服务器断开连接
-                        EventBus.getDefault().post(new ServiceEvent(false,ServiceEvent.TIMEOUT));
+                        EventBus.getDefault().post(new ServiceEvent(false, ServiceEvent.TIMEOUT));
                         DPDB.setServiceconn(false);
-                        LogUtil.d(TAG,"没有收到服务器的回复，认定为服务器断线，重新连接服务器");
+                        LogUtil.d(TAG, "没有收到服务器的回复，认定为服务器断线，重新连接服务器");
                         disconnectAC();
                         wsStatus = WS_STATUS_RECONNECT;
                     } else {

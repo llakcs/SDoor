@@ -959,7 +959,7 @@ public class DeviceImpl implements DeviceManager {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onOpenLockRecallEvent(OpenLockRecallEvent openLockRecallEvent) {
         if (serviceOpenLockListner != null) {
-            serviceOpenLockListner.lockopen();
+            serviceOpenLockListner.lockopen(openLockRecallEvent.getOpenWay());
         }
     }
     @Subscribe(threadMode = ThreadMode.MAIN)

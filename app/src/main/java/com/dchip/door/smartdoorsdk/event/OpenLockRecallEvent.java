@@ -5,4 +5,14 @@ package com.dchip.door.smartdoorsdk.event;
  */
 
 public class OpenLockRecallEvent {
+    int openWay = -1;
+
+    public OpenLockRecallEvent(int way){
+        openWay = way;
+    }
+
+    public int getOpenWay() {
+        return openWay;
+    }
+
 }

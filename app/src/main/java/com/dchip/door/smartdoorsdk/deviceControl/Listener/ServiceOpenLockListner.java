@@ -7,5 +7,5 @@ public interface ServiceOpenLockListner {
     /**
      * 服务器端打开锁时回调
      */
-    void lockopen();
+    void lockopen(int way);
 }
