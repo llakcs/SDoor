@@ -288,7 +288,9 @@ public class TakePhotoService extends Service implements SurfaceHolder.Callback 
                     e.printStackTrace();
                 } finally {
                     try {
-                        fos.close();
+                        if (fos!=null) {
+                            fos.close();
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
