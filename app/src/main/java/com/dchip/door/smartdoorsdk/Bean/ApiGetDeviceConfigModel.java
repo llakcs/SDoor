@@ -13,8 +13,8 @@ public class ApiGetDeviceConfigModel {
     int orignal_lock_access = 1;
     //1-常闭接法  2-常开接法
     int lock_access = 1 ;
-    //主控板开放的功能 1-业主开门  2-开门拍照  3-人脸识别  4-智能语音
-    String function = "1-3-4";
+    //主控板开放的功能 1-业主开门  2-开门拍照  3-人脸识别  4-智能语音 5-开门语音 6-IC卡开门
+    String function = "";
     //锁类型  1-电插锁 2-电磁锁  3-电机锁
     int lock_type = 1;
     //门口机本身环信账号

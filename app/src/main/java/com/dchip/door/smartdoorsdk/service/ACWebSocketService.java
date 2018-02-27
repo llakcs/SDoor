@@ -62,7 +62,7 @@ public class ACWebSocketService extends Service {
     /**
      * 服务器回应间隔时间
      */
-    private final int INTERVAL_DISCONNECT = 10 * 1000;
+    private final int INTERVAL_DISCONNECT = 25 * 1000;
 
     /**
      * 长链接操作类
@@ -182,22 +182,22 @@ public class ACWebSocketService extends Service {
                         LogUtil.d(TAG, "接收到开锁socket：" + payload);
                         //1为开锁信息
                         if (s.device().getLock() != null) {
-                            switch (operationModel.getOpenWay()) {
-                                case 1://手机
-                                case 2://刷卡
-                                case 3://手环
-                                case 4://扫码
-                                    Intent i = new Intent(getApplicationContext(), TakePhotoService.class);
-                                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss_SSS");
-                                    String fileneme = com.dchip.door.smartdoorsdk.utils.Constant.VIST_PHOTO_PATH + sdf.format(System.currentTimeMillis()) + ".jpg";
-                                    i.putExtra("path",fileneme);
-                                    startService(i);
-                                    break;
-                                case 6://视频对讲开锁
-                                case 5://人脸识别
-                                default:
-                                    break;
-                            }
+//                            switch (operationModel.getOpenWay()) {
+//                                case 1://手机
+//                                case 2://刷卡
+//                                case 3://手环
+//                                case 4://扫码
+//                                    Intent i = new Intent(getApplicationContext(), TakePhotoService.class);
+//                                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss_SSS");
+//                                    String fileneme = com.dchip.door.smartdoorsdk.utils.Constant.VIST_PHOTO_PATH + sdf.format(System.currentTimeMillis()) + ".jpg";
+//                                    i.putExtra("path",fileneme);
+//                                    startService(i);
+//                                    break;
+//                                case 6://视频对讲开锁
+//                                case 5://人脸识别
+//                                default:
+//                                    break;
+//                            }
                             int ret = s.device().getLock().openLock();
                             LogUtil.e(TAG, "###ACWEBSOKCET.ret =" + ret + " // MainActivity.uid =" + DPDB.getUid());
                             if (ret == 1) {
@@ -213,22 +213,22 @@ public class ACWebSocketService extends Service {
                     case 11: {
                         LogUtil.d(TAG, "接收到暗盒开锁 socket：" + payload);
                         //1为开锁信息
-                        switch (operationModel.getOpenWay()) {
-                            case 1://手机
-                            case 2://刷卡
-                            case 3://手环
-                            case 4://扫码
-                                Intent i = new Intent(getApplicationContext(), TakePhotoService.class);
-                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss_SSS");
-                                String fileneme = com.dchip.door.smartdoorsdk.utils.Constant.VIST_PHOTO_PATH + sdf.format(System.currentTimeMillis()) + ".jpg";
-                                i.putExtra("path",fileneme);
-                                startService(i);
-                                break;
-                            case 6://视频对讲开锁
-                            case 5://人脸识别
-                            default:
-                                break;
-                        }
+//                        switch (operationModel.getOpenWay()) {
+//                            case 1://手机
+//                            case 2://刷卡
+//                            case 3://手环
+//                            case 4://扫码
+//                                Intent i = new Intent(getApplicationContext(), TakePhotoService.class);
+//                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss_SSS");
+//                                String fileneme = com.dchip.door.smartdoorsdk.utils.Constant.VIST_PHOTO_PATH + sdf.format(System.currentTimeMillis()) + ".jpg";
+//                                i.putExtra("path",fileneme);
+//                                startService(i);
+//                                break;
+//                            case 6://视频对讲开锁
+//                            case 5://人脸识别
+//                            default:
+//                                break;
+//                        }
                     }
                     break;
                     case 99: {
