@@ -1130,7 +1130,9 @@ public class DeviceImpl implements DeviceManager {
                     if (enableLed) {
                         s.device().getLed().openLed(2);
                     }
-                    getLock().openLock();
+                    if (enableLock) {
+                        getLock().openLock();
+                    }
                     break;
                 }
                 case ServiceEvent.UPDATE_APK: {
