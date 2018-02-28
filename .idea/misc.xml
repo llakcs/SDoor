@@ -31,6 +31,17 @@
     <option name="id" value="Android" />
   </component>
   <component name="SvnBranchConfigurationManager">
+    <option name="myConfigurationMap">
+      <map>
+        <entry key="$PROJECT_DIR$/Updatelibrary">
+          <value>
+            <SvnBranchConfiguration>
+              <option name="trunkUrl" value="svn://192.168.10.192/zchiprepo/%E6%99%BA%E8%8A%AF%E6%99%BA%E6%85%A7%E7%A4%BE%E5%8C%BA/%E9%97%A8%E5%8F%A3%E6%9C%BA/android/%E5%85%AC%E7%89%88/DXAccessControlDevice/library" />
+            </SvnBranchConfiguration>
+          </value>
+        </entry>
+      </map>
+    </option>
     <option name="mySupportsUserInfoFilter" value="true" />
   </component>
 </project>
