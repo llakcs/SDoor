@@ -78,6 +78,9 @@ public abstract class ActivityCommon extends AppCompatActivity {
                 Manifest.permission.MODIFY_AUDIO_SETTINGS,
                 Manifest.permission.WRITE_SETTINGS,
                 Manifest.permission.CAMERA,
+                Manifest.permission.BLUETOOTH,
+                Manifest.permission.BLUETOOTH_ADMIN,
+                Manifest.permission.ACCESS_FINE_LOCATION,
         };
 
         ArrayList<String> toApplyList = new ArrayList<String>();
