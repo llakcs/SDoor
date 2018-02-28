@@ -48,11 +48,12 @@ public interface DeviceApi {
      *
      * @param mac         the mac
      * @param networkType the network type
+     * @param smartType the smartType 1-门锁 2-水表 3-电表 4-车位地磁 5-垃圾桶 6 路灯 7智能家庭
      * @return call
      */
     @FormUrlEncoded
     @POST("maincontrol/upload")
-    Call<JsonResult<Object>> uploadMac(@Field("mac") String mac,@Field("networkType") int networkType);
+    Call<JsonResult<Object>> uploadMac(@Field("mac") String mac,@Field("networkType") int networkType,@Field("smartType") int smartType);
 
     /**
      * 上传锁的数据

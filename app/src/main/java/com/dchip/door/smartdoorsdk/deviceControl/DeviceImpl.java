@@ -622,7 +622,7 @@ public class DeviceImpl implements DeviceManager {
     private Runnable uploadMacRunnable = new Runnable() {
         @Override
         public void run() {
-            deviceApi.uploadMac(mac, GetNetworkType()).enqueue(new ApiCallBack<Object>() {
+            deviceApi.uploadMac(mac, GetNetworkType(),1).enqueue(new ApiCallBack<Object>() {
                 @Override
                 public void success(Object o) {
                     isUploadMaced = true;
