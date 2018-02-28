@@ -5,7 +5,6 @@ import android.content.Context;
 import com.dchip.door.smartdoorsdk.deviceControl.DeviceImpl;
 import com.dchip.door.smartdoorsdk.deviceControl.DeviceManager;
 import com.dchip.door.smartdoorsdk.location.LocationManager;
-import com.dchip.door.smartdoorsdk.location.locationImpl;
 import com.dchip.door.smartdoorsdk.opencv.OpencvImpl;
 import com.dchip.door.smartdoorsdk.opencv.OpencvManager;
 import com.dchip.door.smartdoorsdk.player.IMPlayer;
