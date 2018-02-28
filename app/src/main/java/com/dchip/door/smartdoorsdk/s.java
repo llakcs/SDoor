@@ -81,12 +81,12 @@ public class s {
      *
      * @return the location manager
      */
-    public static LocationManager location(){
-        if(Ext.locationManager == null){
-            locationImpl.registerInstance();
-        }
-        return Ext.locationManager;
-    }
+//    public static LocationManager location(){
+//        if(Ext.locationManager == null){
+//            locationImpl.registerInstance();
+//        }
+//        return Ext.locationManager;
+//    }
 
 
     /**
@@ -122,7 +122,7 @@ public class s {
         private static Application app;
         private static OpencvManager opencvManager;
         private static BDVoiceManager bdVoiceManager;
-        private static LocationManager locationManager;
+//        private static LocationManager locationManager;
         private static DeviceManager deviceManager;
         private static IMPlayer imPlayer;
         /**
@@ -186,9 +186,9 @@ public class s {
          *
          * @param locationManager the location manager
          */
-        public static void setLocationManager(LocationManager locationManager){
-            Ext.locationManager = locationManager;
-        }
+//        public static void setLocationManager(LocationManager locationManager){
+//            Ext.locationManager = locationManager;
+//        }
 
         /**
          * 设置设备管理器

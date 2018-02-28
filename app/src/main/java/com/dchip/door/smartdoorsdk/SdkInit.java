@@ -10,7 +10,6 @@ import android.os.Vibrator;
 import com.dchip.door.smartdoorsdk.http.DeviceApi;
 import com.dchip.door.smartdoorsdk.http.RequestHeaderInterceptor;
 import com.dchip.door.smartdoorsdk.receiver.ACBroadcastReceiver;
-import com.dchip.door.smartdoorsdk.service.LocationService;
 import com.dchip.door.smartdoorsdk.utils.Constant;
 import com.dchip.door.smartdoorsdk.utils.CrashHandler;
 import com.dchip.door.smartdoorsdk.utils.DPDB;
@@ -35,7 +34,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 public class SdkInit {
-    public static LocationService locationService;
+//    public static LocationService locationService;
     private static Vibrator mVibrator;
     private static String TAG = "SdkInit";
     public static DeviceApi deviceApi;
@@ -54,7 +53,7 @@ public class SdkInit {
                 new File(Constant.DOWNLOAD_APK_PATH).mkdirs();
                 new File(Constant.CRASH_LOG_PATH).mkdirs();
                 //初始化百度定位sdk
-                locationService = new LocationService(app.getApplicationContext());
+//                locationService = new LocationService(app.getApplicationContext());
                 mVibrator = (Vibrator) app.getApplicationContext().getSystemService(Service.VIBRATOR_SERVICE);
                 //初始化DPDB
                 DPDB.InitDPDbRW(app);
