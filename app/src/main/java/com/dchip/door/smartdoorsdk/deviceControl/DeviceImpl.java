@@ -508,7 +508,7 @@ public class DeviceImpl implements DeviceManager {
             @Override
             public void run() {
                 if (isUploadMaced) {
-                    deviceApi.uploadLock(mac, uid).enqueue(new ApiCallBack<Object>() {
+                    deviceApi.uploadLock(mac, uid,appType).enqueue(new ApiCallBack<Object>() {
                         @Override
                         public void success(Object o) {
 //                            showMsg("上传锁板MAC信息成功");

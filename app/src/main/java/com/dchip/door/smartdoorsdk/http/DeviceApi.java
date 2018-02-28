@@ -64,7 +64,7 @@ public interface DeviceApi {
      */
     @FormUrlEncoded
     @POST("lockcontrol/upload")
-    Call<JsonResult<Object>> uploadLock(@Field("mac") String mac, @Field("uid") String uid);
+    Call<JsonResult<Object>> uploadLock(@Field("mac") String mac, @Field("uid") String uid, @Field("category") int category);
 
     /**
      * 锁板故障上报
