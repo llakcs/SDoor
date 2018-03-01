@@ -110,17 +110,6 @@ public class ACWebSocketService extends Service {
     private void connectAC() {
         String mac = "";
         mac = DPDB.getmac();
-//        if(android.os.Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP) {
-//            ShellUtil.CommandResult cr = ShellUtil.execCommand("cat /proc/cpuinfo", false);
-//            int i = cr.successMsg.indexOf("Serial");
-//            if (i != -1) {
-//                String cpuId = cr.successMsg.substring(i);
-//                cpuId = cpuId.substring(cpuId.indexOf(":") + 1).trim();
-//                mac = cpuId.substring(0, 16);
-//            }
-//        }else {
-//            mac = android.os.Build.SERIAL;
-//        }
         wsStatus = WS_STATUS_CONNECTING;
         String wsUri = String.format(Constant.WS_URI, DPDB.getwsUrl() + mac);//+ "000000"
         // LogUtil.e(TAG, "Status: Connecting to " + wsUri);

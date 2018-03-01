@@ -282,4 +282,7 @@ public interface DeviceManager {
      */
     int getAppType();
 
+    boolean isEnableFaceDetect();
+
+    boolean isEnableOpenVoice();
 }

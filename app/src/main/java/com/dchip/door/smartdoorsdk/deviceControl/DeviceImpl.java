@@ -133,6 +133,8 @@ public class DeviceImpl implements DeviceManager {
     private boolean enableSteer = false;
     private boolean enableLock = false;
     private boolean enableTakePhoto = false;
+    private boolean enableFaceDetect = false;
+    private boolean enableOpenVoice = false;
     private int GET_AD_TIME = 1;
     private int AdvType = 1;
 
@@ -237,6 +239,15 @@ public class DeviceImpl implements DeviceManager {
         enableTakePhoto = true;
         return instance;
     }
+
+    public boolean isEnableFaceDetect() {
+        return enableFaceDetect;
+    }
+
+    public boolean isEnableOpenVoice() {
+        return enableOpenVoice;
+    }
+
 
     @Override
     public int getAppType() {
@@ -920,6 +931,29 @@ public class DeviceImpl implements DeviceManager {
                         FileHelper.writeByFileOutputStream(Constant.LOCK_CONFIG_FILE_PATH, model.getLock_access()
                                 + "/" + model.getDoor_access() + "/" + model.getOrignal_lock_access() + "/" + (model.getLock_num() == 1) + "/" + model.getLock_type());
 
+                        String[] Functions = model.getFunction().split("-");
+                        for (String fun:Functions){
+                            switch(fun){
+                                case "1"://业主开门
+                                    LogUtil.w(TAG,"业主开门功能 无效");
+                                    break;
+                                case "2"://开门拍照
+                                    LogUtil.w(TAG,"开门拍照功能 无效");
+                                    break;
+                                case "3"://人脸识别
+                                    enableFaceDetect = true;
+                                    break;
+                                case "4"://智能语音
+                                    LogUtil.w(TAG,"智能语音功能 无效");
+                                    break;
+                                case "5"://开门语音
+                                    enableOpenVoice = true;
+                                    break;
+                                case "6"://IC卡开门
+                                    EnableCardReader();
+                                    break;
+                            }
+                        }
                     }
                 }
 
