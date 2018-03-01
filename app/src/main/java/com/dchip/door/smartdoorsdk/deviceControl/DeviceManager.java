@@ -234,13 +234,6 @@ public interface DeviceManager {
     DeviceManager setGET_AD_TIME(int GET_AD_TIME);
 
     /**
-     * 设置使能读卡设备
-     *
-     * @return the device
-     */
-    DeviceManager EnableCardReader();
-
-    /**
      * 设置使能锁设备
      *
      * @return the device
