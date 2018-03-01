@@ -202,6 +202,7 @@ public class DeviceImpl implements DeviceManager {
         }
     }
 
+    @Override
     public DeviceManager EnableCardReader() {
         //初始化读卡模块
         CardHandler.getInstance();
