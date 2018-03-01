@@ -879,7 +879,7 @@ public class DeviceImpl implements DeviceManager {
                 public void success(ApiGetDeviceConfigModel model) {
 
                     LogUtil.e(TAG, "成功获取锁配置：锁:" + model.getLock_access() + " 门:" + model.getDoor_access() + " 原锁:" + model.getOrignal_lock_access() +
-                            " 单锁:" + (model.getLock_num() == 1) + " 锁类型:" + model.getLock_type() + " 环信账号:" + model.getEaseAccount());
+                            " 单锁:" + (model.getLock_num() == 1) + " 锁类型:" + model.getLock_type() + " 环信账号:" + model.getEaseAccount()+ " 功能控制:" + model.getFunction());
 
                     if (model.getEaseAccount() != null) {
                         if (easeAccountListner != null) {
@@ -931,28 +931,29 @@ public class DeviceImpl implements DeviceManager {
                         FileHelper.writeByFileOutputStream(Constant.LOCK_CONFIG_FILE_PATH, model.getLock_access()
                                 + "/" + model.getDoor_access() + "/" + model.getOrignal_lock_access() + "/" + (model.getLock_num() == 1) + "/" + model.getLock_type());
 
-                        String[] Functions = model.getFunction().split("-");
-                        for (String fun:Functions){
-                            switch(fun){
-                                case "1"://业主开门
-                                    LogUtil.w(TAG,"业主开门功能 无效");
-                                    break;
-                                case "2"://开门拍照
-                                    LogUtil.w(TAG,"开门拍照功能 无效");
-                                    break;
-                                case "3"://人脸识别
-                                    enableFaceDetect = true;
-                                    break;
-                                case "4"://智能语音
-                                    LogUtil.w(TAG,"智能语音功能 无效");
-                                    break;
-                                case "5"://开门语音
-                                    enableOpenVoice = true;
-                                    break;
-                                case "6"://IC卡开门
-                                    EnableCardReader();
-                                    break;
-                            }
+                    }
+
+                    String[] Functions = model.getFunction().split("-");
+                    for (String fun:Functions){
+                        switch(fun){
+                            case "1"://业主开门
+                                LogUtil.w(TAG,"业主开门功能 无效");
+                                break;
+                            case "2"://开门拍照
+                                LogUtil.w(TAG,"开门拍照功能 无效");
+                                break;
+                            case "3"://人脸识别
+                                enableFaceDetect = true;
+                                break;
+                            case "4"://智能语音
+                                LogUtil.w(TAG,"智能语音功能 无效");
+                                break;
+                            case "5"://开门语音
+                                enableOpenVoice = true;
+                                break;
+                            case "6"://IC卡开门
+                                EnableCardReader();
+                                break;
                         }
                     }
                 }
