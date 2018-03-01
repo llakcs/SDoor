@@ -296,7 +296,7 @@ public class DeviceImpl implements DeviceManager {
             @Override
             public void onOneMinute() {
                 adcount++;
-                if (adcount > GET_AD_TIME) {
+                if (GET_AD_TIME!=0 && adcount > GET_AD_TIME) {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
