@@ -161,6 +161,10 @@ public class DPDB {
 		return writer.commit();
 	}
 
+
+
+
+
 	/** 获取是否播放广告 */
 	public static boolean getAdPlay() {
 		if (!isRead()) {
@@ -194,6 +198,26 @@ public class DPDB {
 		}
 		return reader.getInt("lockId", -1);
 	}
+
+
+
+	/** 保存蓝牙范围 */
+	public static boolean setBluethrange(int range) {
+		if (!isWrite()) {
+			return false;
+		}
+		writer.putInt("Bluethrange", range);
+		return writer.commit();
+	}
+
+	/** 获取蓝牙范围 */
+	public static int getBluethrange() {
+		if (!isRead()) {
+			return 0;
+		}
+		return reader.getInt("Bluethrange", -85);
+	}
+
 
 
 	/** 保存wsurl */
