@@ -199,6 +199,16 @@ public interface DeviceApi {
     @POST("maincontrol/downloadRecord")
     Call<JsonResult<Object>> uploadDownloadProgress(@Field("mac") String mac,@Field("current_progress") int progress,@Field("type") int type);
 
+    /**
+     * 上传是否按键开门成功
+     *
+     * @param uid    the uid
+     * @return call
+     */
+    @FormUrlEncoded
+    @POST("access/setOpenByKeyRecord")
+    Call<JsonResult<Object>> setOpenByKeyRecord(@Field("uid") String uid);
+
 
 //    /**
 //     * 开锁成功返回

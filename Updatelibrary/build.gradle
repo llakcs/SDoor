@@ -37,7 +37,7 @@ uploadArchives {
                 name 'test'
                 groupId GROUP
                 artifactId 'UpdateLibrary'
-                version VERSION
+                version '1.0.0'
                 packaging TYPE
                 licenses {
                     license {

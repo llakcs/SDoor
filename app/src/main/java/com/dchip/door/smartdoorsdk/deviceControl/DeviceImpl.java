@@ -649,6 +649,25 @@ public class DeviceImpl implements DeviceManager {
             });
         }
     };
+    /**
+     * 上传按键开门
+     */
+    private Runnable openByKeyRecordRunnable = new Runnable() {
+        @Override
+        public void run() {
+            deviceApi.setOpenByKeyRecord(uid).enqueue(new ApiCallBack<Object>() {
+                @Override
+                public void success(Object o) {
+                    LogUtil.d(TAG, "上传按键开门 状态 成功");
+                }
+
+                @Override
+                public void fail(int i, String s) {
+                    LogUtil.e(TAG, "上传按键开门 状态 失败" + s);
+                }
+            });
+        }
+    };
 
     /**
      * 检查服务器版本
@@ -1027,6 +1046,7 @@ public class DeviceImpl implements DeviceManager {
                     i = getLock().openLock();
                     LogUtil.e(TAG, "###result lockcode =" + i);
                     EventBus.getDefault().post(new OpenLockStatusEvent(DPDB.getUid(), true));
+                    new Handler().postDelayed(openByKeyRecordRunnable,100);
                 }else{
                     LogUtil.e(TAG, "###result getLock=null");
                 }

@@ -29,7 +29,7 @@ uploadArchives {
                 name 'test'
                 groupId GROUP
                 artifactId 'BDVoice'
-                version VERSION
+                version '1.0.0'
                 packaging TYPE
                 licenses {
                     license {
