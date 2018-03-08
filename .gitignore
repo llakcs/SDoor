@@ -13,3 +13,5 @@
 local.properties
 /native
 */obj
+gradle.properties
+
