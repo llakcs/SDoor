@@ -27,7 +27,7 @@ uploadArchives {
             pom.project {
                 name 'test'
                 groupId GROUP
-                artifactId 'openCVLibrary'
+                artifactId 'OpenCVLibrary'
                 version '1.0.0'
                 packaging TYPE
                 licenses {

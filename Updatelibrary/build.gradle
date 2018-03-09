@@ -36,7 +36,7 @@ uploadArchives {
             pom.project {
                 name 'test'
                 groupId GROUP
-                artifactId 'Updatelibrary'
+                artifactId 'UpdateLibrary'
                 version '1.0.0'
                 packaging TYPE
                 licenses {
