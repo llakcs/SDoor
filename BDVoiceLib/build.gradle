@@ -28,7 +28,7 @@ uploadArchives {
             pom.project {
                 name 'test'
                 groupId GROUP
-                artifactId 'BDVoice'
+                artifactId 'BDVoiceLib'
                 version '1.0.1'
                 packaging TYPE
                 licenses {
@@ -41,6 +41,14 @@ uploadArchives {
             }
         }
     }
+}
+task androidSourcesJar(type: Jar) {
+    classifier = 'sources'
+    from android.sourceSets.main.java.sourceFiles
+}
+
+artifacts {
+    archives androidSourcesJar
 }
 // 进行数字签名
 signing {
