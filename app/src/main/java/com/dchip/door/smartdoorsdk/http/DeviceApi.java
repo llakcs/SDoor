@@ -209,6 +209,16 @@ public interface DeviceApi {
     @POST("access/setOpenByKeyRecord")
     Call<JsonResult<Object>> setOpenByKeyRecord(@Field("uid") String uid);
 
+    /**
+     * 长时间开门，超时异常后，检测到关门时上报。
+     *
+     * @param uid    the uid
+     * @return call
+     */
+    @FormUrlEncoded
+    @POST("lockcontrol/updateNormallyOpenRecord")
+    Call<JsonResult<Object>> doorTimeOutClose(@Field("uid") String uid);
+
 
 //    /**
 //     * 开锁成功返回

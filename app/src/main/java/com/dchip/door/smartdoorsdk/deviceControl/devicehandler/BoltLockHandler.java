@@ -4,6 +4,7 @@ import android.util.Log;
 
 
 import com.dchip.door.smartdoorsdk.deviceControl.interfaces.LockHandler;
+import com.dchip.door.smartdoorsdk.event.DoorTimeOutCloseEvent;
 import com.dchip.door.smartdoorsdk.event.FaultEvent;
 import com.dchip.door.smartdoorsdk.s;
 import com.dchip.door.smartdoorsdk.utils.LogUtil;
@@ -24,6 +25,7 @@ import static com.dchip.door.smartdoorsdk.deviceControl.nativeLev.Pn512Lock.IO_L
 
 public class BoltLockHandler extends LockHandler {
     private static final String TAG = "BoltLockHandler";
+    private static boolean isDoorTimeOut =false;
 
 
 
@@ -93,6 +95,7 @@ public class BoltLockHandler extends LockHandler {
 //                    Log.d(TAG, "opened door counting " + SecCounter);
                     if (checkDoor(doorNum) == OPEN_DOOR) {
                         if (SecCounter > DOOR_LOGN_OPEN_TIMEOUT) {
+                            isDoorTimeOut = true;
                             s.device().showMsg(TAG,"已开锁，开长开 异常报警。 门号:"+ doorNum + 1);
                             LogUtil.e(TAG,"已开锁，开长开 异常报警。 门号:" + doorNum + 1);
                             EventBus.getDefault().post(new FaultEvent(4));
@@ -113,7 +116,11 @@ public class BoltLockHandler extends LockHandler {
     @Override
     public void onDoorClose(final int doorNum) {
         if(isDebugable) {LogUtil.d(TAG, "onDoorClose() OPEN_DOOR=" + OPEN_DOOR);}
-
+        //判断是否曾经超时开门。
+        if(isDoorTimeOut){
+            EventBus.getDefault().post(new DoorTimeOutCloseEvent());
+        }
+        isDoorTimeOut = false;
         if (doorNum != 0 && doorNum != 1 ) {
             LogUtil.e(TAG, "onDoorClose() err doorNum:" + doorNum);
             return;

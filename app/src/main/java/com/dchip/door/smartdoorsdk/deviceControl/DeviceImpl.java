@@ -42,6 +42,7 @@ import com.dchip.door.smartdoorsdk.deviceControl.devicehandler.MotorLockHandler;
 import com.dchip.door.smartdoorsdk.deviceControl.devicehandler.SteerHandler;
 import com.dchip.door.smartdoorsdk.deviceControl.interfaces.LockHandler;
 import com.dchip.door.smartdoorsdk.event.BroadcastEvent;
+import com.dchip.door.smartdoorsdk.event.DoorTimeOutCloseEvent;
 import com.dchip.door.smartdoorsdk.event.FaultEvent;
 import com.dchip.door.smartdoorsdk.event.DeviceCheckEvent;
 import com.dchip.door.smartdoorsdk.event.OpenLockRecallEvent;
@@ -1088,6 +1089,22 @@ public class DeviceImpl implements DeviceManager {
 
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onDoorTimeOutCloseEvent(DoorTimeOutCloseEvent event) {
+        deviceApi.doorTimeOutClose(uid).enqueue(new ApiCallBack<Object>() {
+            @Override
+            public void success(Object o) {
+                LogUtil.d(TAG, "onDoorTimeOutCloseEvent " + new Date() + " 关门上报成功----！");
+            }
+
+            @Override
+            public void fail(int i, String s) {
+                if (s != null) {
+                    LogUtil.d(TAG, "onDoorTimeOutCloseEvent:" + s);
+                }
+            }
+        });
+    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onFaultEvent(FaultEvent event) {

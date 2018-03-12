@@ -34,7 +34,7 @@ uploadArchives {
                 name 'test'
                 groupId GROUP
                 artifactId 'app'
-                version '1.0.3'
+                version '1.0.5'
                 packaging TYPE
                 licenses {
                     license {
@@ -79,10 +79,10 @@ dependencies {
     compile 'org.greenrobot:eventbus:3.0.0'
     //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如2.2.0
     compile 'com.tencent.bugly:nativecrashreport:latest.release'
-
-    compile 'com.dchip.sutil.SDoor:BDVoiceLib:1.0.1'
-    compile 'com.dchip.sutil.SDoor:OpenCVLibrary:1.0.0'
-    compile 'com.dchip.sutil.SDoor:UpdateLibrary:1.0.0'
+//
+    compile 'com.dchip.sutil:BDVoiceLib:1.0.2'
+    compile 'com.dchip.sutil:OpenCVLibrary:1.0.1'
+    compile 'com.dchip.sutil:UpdateLibrary:1.0.1'
 //    compile group: GROUP, name: 'BDVoiceLib', version: '1.0.1', changing: true
 //    compile group: GROUP, name: 'OpenCVLibrary', version: '1.0.0', changing: true
 //    compile group: GROUP, name: 'UpdateLibrary', version: '1.0.0', changing: true
