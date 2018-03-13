@@ -28,7 +28,7 @@ uploadArchives {
                 name 'test'
                 groupId GROUP
                 artifactId 'OpenCVLibrary'
-                version '1.0.0'
+                version '1.0.1'
                 packaging TYPE
                 licenses {
                     license {
