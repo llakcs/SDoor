@@ -225,7 +225,7 @@ public class ACWebSocketService extends Service {
                         networkChekTime = System.currentTimeMillis();
                         LogUtil.v(TAG, "收到服务器的心跳回复：" + operationModel.getTime());
 //                        EventBus.getDefault().post(new InfoEvent("收到服务器的心跳回复：" + operationModel.getTime()));
-                        EventBus.getDefault().post(new ServiceEvent(HEART_BEAT, operationModel.isUnTerminal(), operationModel.isOwnerInfoUnTerminal()));
+                        EventBus.getDefault().post(new ServiceEvent(HEART_BEAT, operationModel.isUnTerminal(), operationModel.isOwnerInfoUnTerminal(),operationModel.isBraceletUnTerminal()));
                         if (operationModel.isOffline()) {
                             disconnectAC();
                         }

@@ -15,7 +15,17 @@ public class OperationModel {
     private int updateType;
     private boolean unTerminal;
     private boolean ownerInfoUnTerminal;
+    private boolean braceletUnTerminal;
     private int openWay = -1;
+
+
+    public boolean isBraceletUnTerminal() {
+        return braceletUnTerminal;
+    }
+
+    public void setBraceletUnTerminal(boolean braceletUnTerminal) {
+        this.braceletUnTerminal = braceletUnTerminal;
+    }
 
     public boolean isOwnerInfoUnTerminal() {
         return ownerInfoUnTerminal;

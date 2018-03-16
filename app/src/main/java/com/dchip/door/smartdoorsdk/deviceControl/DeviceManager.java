@@ -9,6 +9,7 @@ import com.dchip.door.smartdoorsdk.deviceControl.Listener.LockPushListener;
 import com.dchip.door.smartdoorsdk.deviceControl.Listener.LogStrListner;
 import com.dchip.door.smartdoorsdk.deviceControl.Listener.ServerstatusListner;
 import com.dchip.door.smartdoorsdk.deviceControl.Listener.ServiceOpenLockListner;
+import com.dchip.door.smartdoorsdk.deviceControl.Listener.UpdateBraceletListner;
 import com.dchip.door.smartdoorsdk.deviceControl.Listener.UpdateOwenerListner;
 import com.dchip.door.smartdoorsdk.deviceControl.Listener.onPhotoTakenListener;
 import com.dchip.door.smartdoorsdk.deviceControl.devicehandler.LedHandler;
@@ -219,6 +220,12 @@ public interface DeviceManager {
      * 注消 获取环信帐号监听器
      */
     void unRegEaseAcountListner();
+
+    /**
+     * 更新手环列表
+     */
+    void setUpdateBraceletListner(UpdateBraceletListner updateBraceletListner);
+
 
     /**
      * 开启悬浮框服务拍照

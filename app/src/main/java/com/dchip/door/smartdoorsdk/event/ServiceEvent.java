@@ -24,6 +24,15 @@ public class ServiceEvent {
     private int updateType = 2;//立即更新 延时更新
     private boolean updateCards = false;//是否需要更新本地卡
     private ArrayList<String> list;
+    private boolean braceletUnTerminal = false;
+
+    public boolean isBraceletUnTerminal() {
+        return braceletUnTerminal;
+    }
+
+    public void setBraceletUnTerminal(boolean braceletUnTerminal) {
+        this.braceletUnTerminal = braceletUnTerminal;
+    }
 
     public ServiceEvent(boolean connected, int type) {
         this.connected = connected;
@@ -36,11 +45,12 @@ public class ServiceEvent {
         this.updateType = updateType;
     }
 
-    public ServiceEvent(int type,boolean updateCards,boolean updateOwener) {
+    public ServiceEvent(int type,boolean updateCards,boolean updateOwener,boolean braceletUnTerminal) {
         this.connected = true;
         this.type = type;
         this.updateCards = updateCards;
         this.updateOwener = updateOwener;
+        this.braceletUnTerminal = braceletUnTerminal;
     }
 
     public boolean isUpdateOwener() {

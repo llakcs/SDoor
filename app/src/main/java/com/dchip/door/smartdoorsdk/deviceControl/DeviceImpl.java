@@ -28,6 +28,7 @@ import com.dchip.door.smartdoorsdk.deviceControl.Listener.LockPushListener;
 import com.dchip.door.smartdoorsdk.deviceControl.Listener.LogStrListner;
 import com.dchip.door.smartdoorsdk.deviceControl.Listener.ServerstatusListner;
 import com.dchip.door.smartdoorsdk.deviceControl.Listener.ServiceOpenLockListner;
+import com.dchip.door.smartdoorsdk.deviceControl.Listener.UpdateBraceletListner;
 import com.dchip.door.smartdoorsdk.deviceControl.Listener.onPhotoTakenListener;
 import com.dchip.door.smartdoorsdk.deviceControl.Listener.UpdateOwenerListner;
 import com.dchip.door.smartdoorsdk.deviceControl.Listener.onTickListener;
@@ -125,6 +126,7 @@ public class DeviceImpl implements DeviceManager {
     private LockBreakListener mLockBreakListener;
     private LockPushListener mLockPushListener;
     private UpdateOwenerListner mUpdateOwner;
+    private UpdateBraceletListner mUpdateBracelet;
     private ServiceOpenLockListner serviceOpenLockListner;
     private ServerstatusListner mServerstatusListner;
     private EaseAccountListner easeAccountListner;
@@ -327,6 +329,9 @@ public class DeviceImpl implements DeviceManager {
         }
         if (mUpdateOwner != null) {
             mUpdateOwner = null;
+        }
+        if(mUpdateBracelet != null){
+            mUpdateBracelet = null;
         }
         if (mHumanChcekListner != null) {
             mHumanChcekListner = null;
@@ -1000,8 +1005,10 @@ public class DeviceImpl implements DeviceManager {
         }
     }
 
-
-
+    @Override
+    public void setUpdateBraceletListner(UpdateBraceletListner updateBraceletListner) {
+        this.mUpdateBracelet = updateBraceletListner;
+    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void UpdateConfigEvent(UpdateConfigEvent updateConfigEvent){
@@ -1156,6 +1163,10 @@ public class DeviceImpl implements DeviceManager {
                         if (mUpdateOwner != null) {
                             this.mUpdateOwner.update();
                         }
+                    }
+
+                    if(event.isBraceletUnTerminal()){
+
                     }
                     if (event.isUpdateCards() && !cardsProgressing) {
                         cardsProgressing = true;
