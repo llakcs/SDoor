@@ -34,7 +34,7 @@ uploadArchives {
                 name 'test'
                 groupId GROUP
                 artifactId 'app'
-                version '1.0.6'
+                version '1.0.7'
                 packaging TYPE
                 licenses {
                     license {

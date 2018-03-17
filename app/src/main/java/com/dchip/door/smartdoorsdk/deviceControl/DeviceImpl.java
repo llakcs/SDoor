@@ -1166,7 +1166,9 @@ public class DeviceImpl implements DeviceManager {
                     }
 
                     if(event.isBraceletUnTerminal()){
-
+                        if(mUpdateBracelet != null) {
+                            mUpdateBracelet.UpdateBrace();
+                        }
                     }
                     if (event.isUpdateCards() && !cardsProgressing) {
                         cardsProgressing = true;
