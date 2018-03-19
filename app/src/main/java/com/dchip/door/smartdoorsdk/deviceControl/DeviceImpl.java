@@ -1216,6 +1216,7 @@ public class DeviceImpl implements DeviceManager {
                         s.device().getLed().openLed(2);
                     }
                     if (enableLock) {
+                        if(getLock() != null)
                         getLock().openLock();
                     }
                     break;
@@ -1275,6 +1276,7 @@ public class DeviceImpl implements DeviceManager {
                 s.device().getLed().closeLed(2);
             }
             if (enableLock) {
+                if(getLock() != null)
                 getLock().longOpenLock();
             }
 //            if (longOpen) mServiceInfo.setText("离线  长开锁状态");
