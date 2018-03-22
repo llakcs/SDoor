@@ -194,7 +194,8 @@ public class OpencvImpl implements OpencvManager,CameraBridgeViewBase.CvCameraVi
         }
         mRgba = inputFrame.rgba();
         mGray = inputFrame.gray();
-
+        //把OPENCV BGR翻一下变成RGB
+        Imgproc.cvtColor(mRgba,mRgba,Imgproc.COLOR_BGR2RGB);
         if (mAbsoluteFaceSize == 0) {
             LogUtil.e(TAG,"###mAbsoluteFaceSize == 0");
             int height = mGray.rows();
