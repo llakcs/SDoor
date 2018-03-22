@@ -21,6 +21,7 @@ import com.dchip.door.smartdoorsdk.Bean.ApiGetPropManagement;
 import com.dchip.door.smartdoorsdk.Bean.AppUpdateModel;
 import com.dchip.door.smartdoorsdk.Bean.CardsModel;
 import com.dchip.door.smartdoorsdk.Bean.ManagementMemberModel;
+import com.dchip.door.smartdoorsdk.deviceControl.Listener.BluethRssiListner;
 import com.dchip.door.smartdoorsdk.deviceControl.Listener.EaseAccountListner;
 import com.dchip.door.smartdoorsdk.deviceControl.Listener.HumanCheckListner;
 import com.dchip.door.smartdoorsdk.deviceControl.Listener.LockBreakListener;
@@ -130,6 +131,7 @@ public class DeviceImpl implements DeviceManager {
     private ServiceOpenLockListner serviceOpenLockListner;
     private ServerstatusListner mServerstatusListner;
     private EaseAccountListner easeAccountListner;
+    private BluethRssiListner bluethRssiListner;
     private onPhotoTakenListener photoTakenListener;
     private LogStrListner mlogStrListner;
     private boolean enableLed = false;
@@ -336,6 +338,9 @@ public class DeviceImpl implements DeviceManager {
         if (mHumanChcekListner != null) {
             mHumanChcekListner = null;
         }
+        if(bluethRssiListner != null){
+            bluethRssiListner = null;
+        }
     }
 
     @Override
@@ -439,6 +444,12 @@ public class DeviceImpl implements DeviceManager {
     @Override
     public void setEaseAcountListner(EaseAccountListner acountListner) {
         this.easeAccountListner = acountListner;
+    }
+
+
+    @Override
+    public void setBluethRssiListner(BluethRssiListner bluethRssiListner) {
+        this.bluethRssiListner = bluethRssiListner;
     }
 
     @Override
@@ -904,13 +915,19 @@ public class DeviceImpl implements DeviceManager {
                 public void success(ApiGetDeviceConfigModel model) {
 
                     LogUtil.e(TAG, "成功获取锁配置：锁:" + model.getLock_access() + " 门:" + model.getDoor_access() + " 原锁:" + model.getOrignal_lock_access() +
-                            " 单锁:" + (model.getLock_num() == 1) + " 锁类型:" + model.getLock_type() + " 环信账号:" + model.getEaseAccount()+ " 功能控制:" + model.getFunction());
+                            " 单锁:" + (model.getLock_num() == 1) + " 锁类型:" + model.getLock_type() + " 环信账号:" + model.getEaseAccount()+ " 功能控制:" + model.getFunction()+" 蓝牙RSSI:" +model.getBraceletDistance());
 
                     if (model.getEaseAccount() != null) {
                         if (easeAccountListner != null) {
                             easeAccountListner.ResultAcount(model.getEaseAccount().toString());
                         }
                     }
+                    if(model.getBraceletDistance()<0){
+                        if(bluethRssiListner != null){
+                            bluethRssiListner.Rssi(model.getBraceletDistance());
+                        }
+                    }
+
                     if (enableLock) {
                         switch (model.getLock_type()) {
                             case 1:

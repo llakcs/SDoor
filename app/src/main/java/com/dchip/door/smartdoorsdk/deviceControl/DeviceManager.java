@@ -2,6 +2,7 @@ package com.dchip.door.smartdoorsdk.deviceControl;
 
 import android.app.Activity;
 
+import com.dchip.door.smartdoorsdk.deviceControl.Listener.BluethRssiListner;
 import com.dchip.door.smartdoorsdk.deviceControl.Listener.EaseAccountListner;
 import com.dchip.door.smartdoorsdk.deviceControl.Listener.HumanCheckListner;
 import com.dchip.door.smartdoorsdk.deviceControl.Listener.LockBreakListener;
@@ -225,6 +226,12 @@ public interface DeviceManager {
      * 更新手环列表
      */
     void setUpdateBraceletListner(UpdateBraceletListner updateBraceletListner);
+
+    /**
+     * 设置蓝牙信号强弱
+     * @param bluethRssiListner
+     */
+    void setBluethRssiListner(BluethRssiListner bluethRssiListner);
 
 
     /**

@@ -21,6 +21,9 @@ public class ApiGetDeviceConfigModel {
     String easeAccount;
     int id = 25;
 
+    int braceletDistance;
+
+
     public int getLock_num() {
         return lock_num;
     }
@@ -83,5 +86,13 @@ public class ApiGetDeviceConfigModel {
 
     public void setEaseAccount(String easeAccount) {
         this.easeAccount = easeAccount;
+    }
+
+    public int getBraceletDistance() {
+        return braceletDistance;
+    }
+
+    public void setBraceletDistance(int braceletDistance) {
+        this.braceletDistance = braceletDistance;
     }
 }
