@@ -3,6 +3,7 @@ package com.dchip.door.smartdoorsdk.opencv;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 
 import com.dchip.door.smartdoorsdk.R;
 import com.dchip.door.smartdoorsdk.s;
@@ -194,8 +195,10 @@ public class OpencvImpl implements OpencvManager,CameraBridgeViewBase.CvCameraVi
         }
         mRgba = inputFrame.rgba();
         mGray = inputFrame.gray();
-        //把OPENCV BGR翻一下变成RGB
-        Imgproc.cvtColor(mRgba,mRgba,Imgproc.COLOR_BGR2RGB);
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M) {
+            //把OPENCV BGR翻一下变成RGB 6.0需要改成这样
+            Imgproc.cvtColor(mRgba, mRgba, Imgproc.COLOR_BGR2RGB);
+        }
         if (mAbsoluteFaceSize == 0) {
             LogUtil.e(TAG,"###mAbsoluteFaceSize == 0");
             int height = mGray.rows();
