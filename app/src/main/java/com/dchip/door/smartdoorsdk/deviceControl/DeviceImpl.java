@@ -768,6 +768,7 @@ public class DeviceImpl implements DeviceManager {
      * 上传锁信息
      */
     public void getAd() {
+        if(controlhandler != null)
         controlhandler.postDelayed(new Runnable() {
             @Override
             public void run() {

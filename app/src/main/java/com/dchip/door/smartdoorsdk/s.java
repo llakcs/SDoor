@@ -116,7 +116,7 @@ public class s {
     /**
      * 扩展类
      */
-    public static class Ext{
+        public static class Ext{
 
         private static Application app;
         private static OpencvManager opencvManager;
