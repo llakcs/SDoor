@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
 
 import com.dchip.door.smartdoorsdk.Bean.CardsModel;
 import com.dchip.door.smartdoorsdk.Bean.DoorOperationModel;
@@ -84,7 +83,6 @@ public class ACWebSocketService extends Service {
     private long networkChekTime = 0L;
 
 
-    @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return null;

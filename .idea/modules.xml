@@ -2,11 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/BDVoiceLib/BDVoiceLib.iml" filepath="$PROJECT_DIR$/BDVoiceLib/BDVoiceLib.iml" />
       <module fileurl="file://$PROJECT_DIR$/SDoor.iml" filepath="$PROJECT_DIR$/SDoor.iml" />
       <module fileurl="file://$PROJECT_DIR$/Updatelibrary/Updatelibrary.iml" filepath="$PROJECT_DIR$/Updatelibrary/Updatelibrary.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/openCVLibrary330/openCVLibrary330.iml" filepath="$PROJECT_DIR$/openCVLibrary330/openCVLibrary330.iml" />
       <module fileurl="file://D:\development\github\sutils\openCVLibrary340\openCVLibrary340.iml" filepath="D:\development\github\sutils\openCVLibrary340\openCVLibrary340.iml" />
     </modules>
   </component>

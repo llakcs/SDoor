@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Vibrator;
-
 import com.dchip.door.smartdoorsdk.http.DeviceApi;
 import com.dchip.door.smartdoorsdk.http.RequestHeaderInterceptor;
 import com.dchip.door.smartdoorsdk.receiver.ACBroadcastReceiver;
@@ -14,12 +13,10 @@ import com.dchip.door.smartdoorsdk.utils.Constant;
 import com.dchip.door.smartdoorsdk.utils.CrashHandler;
 import com.dchip.door.smartdoorsdk.utils.DPDB;
 import com.dchip.door.smartdoorsdk.utils.LogUtil;
-import com.dchip.door.smartdoorsdk.voice.TTSHandler;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.connection.FileDownloadUrlConnection;
 import com.liulishuo.filedownloader.util.FileDownloadLog;
 import com.tencent.bugly.crashreport.CrashReport;
-
 import java.io.File;
 import java.net.Proxy;
 import java.util.Map;
@@ -34,8 +31,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 public class SdkInit {
-//    public static LocationService locationService;
-    private static Vibrator mVibrator;
+
     private static String TAG = "SdkInit";
     public static DeviceApi deviceApi;
 
@@ -52,13 +48,8 @@ public class SdkInit {
                 new File(Constant.VIST_PHOTO_PATH).mkdirs();
                 new File(Constant.DOWNLOAD_APK_PATH).mkdirs();
                 new File(Constant.CRASH_LOG_PATH).mkdirs();
-                //初始化百度定位sdk
-//                locationService = new LocationService(app.getApplicationContext());
-                mVibrator = (Vibrator) app.getApplicationContext().getSystemService(Service.VIBRATOR_SERVICE);
                 //初始化DPDB
                 DPDB.InitDPDbRW(app);
-                //初始化百度语音合成
-                TTSHandler.getInstance(app);
                 //服务器地址和websocket地址不为空
                 if(wsUrl != null && serverUrl != null){
                     DPDB.setwsUrl(wsUrl);

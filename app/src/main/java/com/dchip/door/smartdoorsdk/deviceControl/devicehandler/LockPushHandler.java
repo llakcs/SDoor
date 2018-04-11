@@ -37,6 +37,7 @@ public class LockPushHandler {
         @Override
         public void run() {
             int statuslod = inv(defOpen);
+//            LogUtil.e(TAG,"###DeviceCheckEvent.LockPushHandler.statuslod ="+statuslod);
             while (!stop) {
                 try {
                     Thread.sleep(200);

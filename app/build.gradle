@@ -34,7 +34,7 @@ uploadArchives {
                 name 'test'
                 groupId GROUP
                 artifactId 'app'
-                version '1.1.1'
+                version '1.2.5'
                 packaging TYPE
                 licenses {
                     license {
@@ -68,9 +68,6 @@ signing {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     testImplementation 'junit:junit:4.12'
-    //    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    //    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-    implementation files('libs/com.baidu.tts_2.3.0.jar')
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
@@ -79,14 +76,6 @@ dependencies {
     compile 'org.greenrobot:eventbus:3.0.0'
     //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如2.2.0
     compile 'com.tencent.bugly:nativecrashreport:latest.release'
-//
-    compile 'com.dchip.sutil:BDVoiceLib:1.0.2'
-    compile 'com.dchip.sutil:OpenCVLibrary:1.0.1'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.dchip.sutil:UpdateLibrary:1.0.1'
-//    compile group: GROUP, name: 'BDVoiceLib', version: '1.0.1', changing: true
-//    compile group: GROUP, name: 'OpenCVLibrary', version: '1.0.0', changing: true
-//    compile group: GROUP, name: 'UpdateLibrary', version: '1.0.0', changing: true
-//    implementation project(':BDVoiceLib')
-//    implementation project(':openCVLibrary330')
-//    implementation project(':Updatelibrary')
 }
