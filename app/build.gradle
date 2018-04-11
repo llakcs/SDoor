@@ -24,6 +24,9 @@ android {
     sourceSets { main { assets.srcDirs = ['src/SdkInit/assets', 'src/SdkInit/assets/'] } }
 }
 
+
+
+
 uploadArchives {
     repositories {
         mavenDeployer {
@@ -34,7 +37,7 @@ uploadArchives {
                 name 'test'
                 groupId GROUP
                 artifactId 'app'
-                version '1.2.5'
+                version '1.2.8'
                 packaging TYPE
                 licenses {
                     license {
