@@ -2,8 +2,6 @@ package com.dchip.door.smartdoorsdk.deviceControl;
 
 import android.app.Activity;
 
-import com.dchip.door.smartdoorsdk.deviceControl.Listener.BluethRssiListner;
-import com.dchip.door.smartdoorsdk.deviceControl.Listener.EaseAccountListner;
 import com.dchip.door.smartdoorsdk.deviceControl.Listener.HumanCheckListner;
 import com.dchip.door.smartdoorsdk.deviceControl.Listener.LockBreakListener;
 import com.dchip.door.smartdoorsdk.deviceControl.Listener.LockPushListener;
@@ -11,6 +9,7 @@ import com.dchip.door.smartdoorsdk.deviceControl.Listener.LogStrListner;
 import com.dchip.door.smartdoorsdk.deviceControl.Listener.ServerstatusListner;
 import com.dchip.door.smartdoorsdk.deviceControl.Listener.ServiceOpenLockListner;
 import com.dchip.door.smartdoorsdk.deviceControl.Listener.UpdateBraceletListner;
+import com.dchip.door.smartdoorsdk.deviceControl.Listener.UpdateDeviceListner;
 import com.dchip.door.smartdoorsdk.deviceControl.Listener.UpdateOwenerListner;
 import com.dchip.door.smartdoorsdk.deviceControl.Listener.onPhotoTakenListener;
 import com.dchip.door.smartdoorsdk.deviceControl.devicehandler.LedHandler;
@@ -88,6 +87,7 @@ public interface DeviceManager {
      * @return the human check listner
      */
     DeviceManager setHumanCheckListner(HumanCheckListner humanCheckListner);
+
 
     /**
      * 系统日志打印
@@ -210,17 +210,9 @@ public interface DeviceManager {
      */
     void updateOnwerStatus();
 
-    /**
-     * 注册 获取环信帐号监听器
-     *
-     * @param acountListner the acount listner
-     */
-    void setEaseAcountListner(EaseAccountListner acountListner);
 
-    /**
-     * 注消 获取环信帐号监听器
-     */
-    void unRegEaseAcountListner();
+
+
 
     /**
      * 更新手环列表
@@ -228,10 +220,10 @@ public interface DeviceManager {
     void setUpdateBraceletListner(UpdateBraceletListner updateBraceletListner);
 
     /**
-     * 设置蓝牙信号强弱
-     * @param bluethRssiListner
+     * 重新拉取与设备相关的服务器信息
+     * @param updateDeviceListner
      */
-    void setBluethRssiListner(BluethRssiListner bluethRssiListner);
+    void setUpdateDeviceListner(UpdateDeviceListner updateDeviceListner);
 
 
     /**

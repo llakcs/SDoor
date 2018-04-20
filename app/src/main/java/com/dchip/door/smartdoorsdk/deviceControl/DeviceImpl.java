@@ -21,8 +21,6 @@ import com.dchip.door.smartdoorsdk.Bean.ApiGetPropManagement;
 import com.dchip.door.smartdoorsdk.Bean.AppUpdateModel;
 import com.dchip.door.smartdoorsdk.Bean.CardsModel;
 import com.dchip.door.smartdoorsdk.Bean.ManagementMemberModel;
-import com.dchip.door.smartdoorsdk.deviceControl.Listener.BluethRssiListner;
-import com.dchip.door.smartdoorsdk.deviceControl.Listener.EaseAccountListner;
 import com.dchip.door.smartdoorsdk.deviceControl.Listener.HumanCheckListner;
 import com.dchip.door.smartdoorsdk.deviceControl.Listener.LockBreakListener;
 import com.dchip.door.smartdoorsdk.deviceControl.Listener.LockPushListener;
@@ -30,6 +28,7 @@ import com.dchip.door.smartdoorsdk.deviceControl.Listener.LogStrListner;
 import com.dchip.door.smartdoorsdk.deviceControl.Listener.ServerstatusListner;
 import com.dchip.door.smartdoorsdk.deviceControl.Listener.ServiceOpenLockListner;
 import com.dchip.door.smartdoorsdk.deviceControl.Listener.UpdateBraceletListner;
+import com.dchip.door.smartdoorsdk.deviceControl.Listener.UpdateDeviceListner;
 import com.dchip.door.smartdoorsdk.deviceControl.Listener.onPhotoTakenListener;
 import com.dchip.door.smartdoorsdk.deviceControl.Listener.UpdateOwenerListner;
 import com.dchip.door.smartdoorsdk.deviceControl.Listener.onTickListener;
@@ -130,10 +129,9 @@ public class DeviceImpl implements DeviceManager {
     private UpdateBraceletListner mUpdateBracelet;
     private ServiceOpenLockListner serviceOpenLockListner;
     private ServerstatusListner mServerstatusListner;
-    private EaseAccountListner easeAccountListner;
-    private BluethRssiListner bluethRssiListner;
     private onPhotoTakenListener photoTakenListener;
     private LogStrListner mlogStrListner;
+    private UpdateDeviceListner mUpdateDeviceListner;
     private boolean enableLed = false;
     private boolean enableSteer = false;
     private boolean enableLock = false;
@@ -142,7 +140,7 @@ public class DeviceImpl implements DeviceManager {
     private boolean enableOpenVoice = false;
     private int GET_AD_TIME = 1;
     private int AdvType = 1;
-
+    boolean EnableUploadPush = true;
     private DeviceImpl() {
     }
 
@@ -167,7 +165,10 @@ public class DeviceImpl implements DeviceManager {
         controlhandler = new Handler();
         this.mAcitvity = activity;
         appType = appTypeNum;
-        EventBus.getDefault().register(this);
+        if (!EventBus.getDefault().isRegistered(this))
+        {
+            EventBus.getDefault().register(this);
+        }
         //获取mac
         if (appType == 9) {
             mac = getLocalMacAddressFromNetcfg().replace(":", "");
@@ -322,7 +323,9 @@ public class DeviceImpl implements DeviceManager {
             controlhandler.removeCallbacksAndMessages(null);
             controlhandler = null;
         }
-        EventBus.getDefault().unregister(this);
+        if (EventBus.getDefault().isRegistered(this)){
+            EventBus.getDefault().unregister(this);
+        }
         if (mServerstatusListner != null) {
             mServerstatusListner = null;
         }
@@ -338,9 +341,10 @@ public class DeviceImpl implements DeviceManager {
         if (mHumanChcekListner != null) {
             mHumanChcekListner = null;
         }
-        if(bluethRssiListner != null){
-            bluethRssiListner = null;
+        if(mUpdateDeviceListner != null){
+            mUpdateDeviceListner = null;
         }
+
     }
 
     @Override
@@ -442,24 +446,6 @@ public class DeviceImpl implements DeviceManager {
     }
 
     @Override
-    public void setEaseAcountListner(EaseAccountListner acountListner) {
-        this.easeAccountListner = acountListner;
-    }
-
-
-    @Override
-    public void setBluethRssiListner(BluethRssiListner bluethRssiListner) {
-        this.bluethRssiListner = bluethRssiListner;
-    }
-
-    @Override
-    public void unRegEaseAcountListner() {
-        if (this.easeAccountListner != null) {
-            this.easeAccountListner = null;
-        }
-    }
-
-    @Override
     public void takePhoto(onPhotoTakenListener tp) {
         if (enableTakePhoto) {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss_SSS");
@@ -469,6 +455,11 @@ public class DeviceImpl implements DeviceManager {
             mAcitvity.startService(intent);
             photoTakenListener = tp;
         }
+    }
+
+    @Override
+    public void setUpdateDeviceListner(UpdateDeviceListner updateDeviceListner) {
+        this.mUpdateDeviceListner = updateDeviceListner;
     }
 
     @Override
@@ -917,17 +908,9 @@ public class DeviceImpl implements DeviceManager {
 
                     LogUtil.e(TAG, "成功获取锁配置：锁:" + model.getLock_access() + " 门:" + model.getDoor_access() + " 原锁:" + model.getOrignal_lock_access() +
                             " 单锁:" + (model.getLock_num() == 1) + " 锁类型:" + model.getLock_type() + " 环信账号:" + model.getEaseAccount()+ " 功能控制:" + model.getFunction()+" 蓝牙RSSI:" +model.getBraceletDistance());
-
-                    if (model.getEaseAccount() != null) {
-                        if (easeAccountListner != null) {
-                            easeAccountListner.ResultAcount(model.getEaseAccount().toString());
-                        }
-                    }
-                    if(model.getBraceletDistance()<0){
-                        if(bluethRssiListner != null){
-                            bluethRssiListner.Rssi(model.getBraceletDistance());
-                        }
-                    }
+                     if(mUpdateDeviceListner != null && model.getEaseAccount() != null && model.getBraceletDistance()<0){
+                         mUpdateDeviceListner.UpdateDevice(model.getEaseAccount().toString(),model.getBraceletDistance());
+                     }
 
                     if (enableLock) {
                         switch (model.getLock_type()) {
@@ -1011,6 +994,7 @@ public class DeviceImpl implements DeviceManager {
     };
 
 
+
     @Override
     public void setLogStrListner(LogStrListner logStrListner) {
           this.mlogStrListner = logStrListner;
@@ -1065,17 +1049,29 @@ public class DeviceImpl implements DeviceManager {
                 break;
             }
             case "lockPush": {
-                if (mLockPushListener != null)
-                    mLockPushListener.onPush();
-                int i=0;
-                if (getLock()!=null) {
-                    i = getLock().openLock();
-                    LogUtil.e(TAG, "###result lockcode =" + i);
-                    EventBus.getDefault().post(new OpenLockStatusEvent(DPDB.getUid(), true));
-                    new Handler().postDelayed(openByKeyRecordRunnable,100);
-                }else{
-                    LogUtil.e(TAG, "###result getLock=null");
+                Log.e(TAG,"###@@@@@@@@@@@@@@lockPush");
+                if(EnableUploadPush){
+                    EnableUploadPush =false;
+                    if (mLockPushListener != null)
+                        mLockPushListener.onPush();
+                    int i=0;
+                    if (getLock()!=null) {
+                        i = getLock().openLock();
+                        LogUtil.e(TAG, "###result lockcode =" + i);
+                        EventBus.getDefault().post(new OpenLockStatusEvent(DPDB.getUid(), true));
+                        try {
+                            Thread.sleep(2000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        new Handler().postDelayed(openByKeyRecordRunnable,100);
+                        LogUtil.e(TAG, "##上传按键开锁记录 =");
+                    }else{
+                        LogUtil.e(TAG, "###result getLock=null");
+                    }
+                    EnableUploadPush = true;
                 }
+
                 break;
             }
         }
