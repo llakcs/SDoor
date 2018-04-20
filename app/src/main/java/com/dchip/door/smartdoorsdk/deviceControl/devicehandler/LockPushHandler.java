@@ -46,9 +46,10 @@ public class LockPushHandler {
                 }
                 int statusnew = mPush.checkDevice();
                 if (statuslod != statusnew){
-                    if (statusnew == defOpen)
-                        LogUtil.e(TAG,"###DeviceCheckEvent.LockPushHandler");
+                    if (statusnew == defOpen) {
+                        LogUtil.e(TAG, "###DeviceCheckEvent.LockPushHandler");
                         EventBus.getDefault().post(new DeviceCheckEvent("lockPush"));
+                    }
                 }
                 LogUtil.v(TAG,"###DeviceCheckEvent 按钮检测:" + statusnew);
                 statuslod = statusnew;
