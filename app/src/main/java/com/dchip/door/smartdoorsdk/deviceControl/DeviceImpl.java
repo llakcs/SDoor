@@ -756,7 +756,7 @@ public class DeviceImpl implements DeviceManager {
     }
 
     /**
-     * 上传锁信息
+     * 获取广告信息
      */
     public void getAd() {
         if(controlhandler != null)
@@ -1059,11 +1059,6 @@ public class DeviceImpl implements DeviceManager {
                         i = getLock().openLock();
                         LogUtil.e(TAG, "###result lockcode =" + i);
                         EventBus.getDefault().post(new OpenLockStatusEvent(DPDB.getUid(), true));
-                        try {
-                            Thread.sleep(2000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
                         new Handler().postDelayed(openByKeyRecordRunnable,100);
                         LogUtil.e(TAG, "##上传按键开锁记录 =");
                     }else{
