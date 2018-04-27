@@ -220,6 +220,18 @@ public interface DeviceApi {
     Call<JsonResult<Object>> doorTimeOutClose(@Field("uid") String uid);
 
 
+
+    /**
+     * 远程锁死
+     *
+     * @param mac    the mac
+     * @return call
+     */
+    @FormUrlEncoded
+    @POST("maincontrol/isLock")
+    Call<JsonResult<Integer>> deviceLock(@Field("mac") String mac);
+
+
 //    /**
 //     * 开锁成功返回
 //     *

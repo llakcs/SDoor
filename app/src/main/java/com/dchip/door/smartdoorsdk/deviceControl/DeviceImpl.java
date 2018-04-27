@@ -1,7 +1,9 @@
 package com.dchip.door.smartdoorsdk.deviceControl;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -12,6 +14,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.KeyEvent;
 
 import com.dchip.door.smartdoorsdk.Bean.AdvertisementModel;
 import com.dchip.door.smartdoorsdk.Bean.ApiGetAdvertisement;
@@ -141,6 +144,7 @@ public class DeviceImpl implements DeviceManager {
     private int GET_AD_TIME = 1;
     private int AdvType = 1;
     boolean EnableUploadPush = true;
+
     private DeviceImpl() {
     }
 
@@ -160,13 +164,13 @@ public class DeviceImpl implements DeviceManager {
         this.mLockHandler = lock;
         mLockHandler.closeLock();
     }
+
     @Override
     public DeviceManager init(Activity activity, int appTypeNum) {
         controlhandler = new Handler();
         this.mAcitvity = activity;
         appType = appTypeNum;
-        if (!EventBus.getDefault().isRegistered(this))
-        {
+        if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
         //获取mac
@@ -192,16 +196,17 @@ public class DeviceImpl implements DeviceManager {
         //启动长链接服务
         activity.startService(new Intent(activity, ACWebSocketService.class));
         FileDownloadMonitor.setGlobalMonitor(GlobalMonitor.getImpl());
+        checkDeviceLock();
         return instance;
     }
 
     @Override
     public void showMsg(String tag, String msg) {
-        if(mlogStrListner != null) {
+        if (mlogStrListner != null) {
             LogUtil.e(TAG, "###showmsg");
-            try{
+            try {
                 Thread.sleep(1000);
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             mlogStrListner.resultStr(tag, msg);
@@ -302,7 +307,7 @@ public class DeviceImpl implements DeviceManager {
             @Override
             public void onOneMinute() {
                 adcount++;
-                if (GET_AD_TIME!=0 && adcount > GET_AD_TIME) {
+                if (GET_AD_TIME != 0 && adcount > GET_AD_TIME) {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -323,7 +328,7 @@ public class DeviceImpl implements DeviceManager {
             controlhandler.removeCallbacksAndMessages(null);
             controlhandler = null;
         }
-        if (EventBus.getDefault().isRegistered(this)){
+        if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
         }
         if (mServerstatusListner != null) {
@@ -335,13 +340,13 @@ public class DeviceImpl implements DeviceManager {
         if (mUpdateOwner != null) {
             mUpdateOwner = null;
         }
-        if(mUpdateBracelet != null){
+        if (mUpdateBracelet != null) {
             mUpdateBracelet = null;
         }
         if (mHumanChcekListner != null) {
             mHumanChcekListner = null;
         }
-        if(mUpdateDeviceListner != null){
+        if (mUpdateDeviceListner != null) {
             mUpdateDeviceListner = null;
         }
 
@@ -527,7 +532,7 @@ public class DeviceImpl implements DeviceManager {
             @Override
             public void run() {
                 if (isUploadMaced) {
-                    deviceApi.uploadLock(mac, uid,appType).enqueue(new ApiCallBack<Object>() {
+                    deviceApi.uploadLock(mac, uid, appType).enqueue(new ApiCallBack<Object>() {
                         @Override
                         public void success(Object o) {
 //                            showMsg("上传锁板MAC信息成功");
@@ -545,6 +550,33 @@ public class DeviceImpl implements DeviceManager {
             }
         }, 2000);
     }
+
+    public void checkDeviceLock() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                deviceApi.deviceLock(mac).enqueue(new ApiCallBack<Integer>() {
+                    @Override
+                    public void success(Integer o) {
+                        if (o.intValue() == 1){
+                            if (getLock()!=null){
+                                getLock().longOpenLock();
+                            }
+                            showNormalDialog("授权超时，请联系供应商");
+                        }
+                        checkDeviceLock();
+                    }
+
+                    @Override
+                    public void fail(int i, String s) {
+                        LogUtil.e(TAG, "checkDeviceLock fail s:"+s);
+                        checkDeviceLock();
+                    }
+                });
+            }
+        }, 60 * 1000);
+    }
+
 
     @Override
     public void checkCrashLogAndUpload() {
@@ -621,6 +653,7 @@ public class DeviceImpl implements DeviceManager {
      *
      * @return
      */
+
     public String getVersionName() {
         PackageManager packageManager = mAcitvity.getPackageManager();
         PackageInfo packageInfo;
@@ -641,7 +674,7 @@ public class DeviceImpl implements DeviceManager {
     private Runnable uploadMacRunnable = new Runnable() {
         @Override
         public void run() {
-            deviceApi.uploadMac(mac, GetNetworkType(),1).enqueue(new ApiCallBack<Object>() {
+            deviceApi.uploadMac(mac, GetNetworkType(), 1).enqueue(new ApiCallBack<Object>() {
                 @Override
                 public void success(Object o) {
                     isUploadMaced = true;
@@ -692,10 +725,10 @@ public class DeviceImpl implements DeviceManager {
                     }
 //                    String serverUrl = DPDB.getserverUrl();
 //                    final String url = serverUrl.substring(0, serverUrl.length() - 5) + o.getAddress();
-                    final String url =o.getDetailAddress();
-                    LogUtil.e(TAG,"DownloadUrl ="+url);
+                    final String url = o.getDetailAddress();
+                    LogUtil.e(TAG, "DownloadUrl =" + url);
 //                    showMsg("检查版本号成功 " + o.getVersion() + " url:" + url);
-                    if(url != null && !url.equals("")){
+                    if (url != null && !url.equals("")) {
                         if (!o.getVersion().equals(getVersionName())) {//检查版本号不一致时更新
                             LogUtil.w(TAG, "checkVersionRunnable  " + o.getVersion());
                             LogUtil.w(TAG, "url:" + url);
@@ -759,92 +792,92 @@ public class DeviceImpl implements DeviceManager {
      * 获取广告信息
      */
     public void getAd() {
-        if(controlhandler != null)
-        controlhandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                deviceApi.getAd(mac, appType).enqueue(new ApiCallBack<ApiGetAdvertisement>() {
-                    @Override
-                    public void success(ApiGetAdvertisement o) {
-                        AdvType = o.getAdvType();
-                        Log.w(TAG, "getAd success AdvType=" + o.getAdvType());
-                        if (o.getAdvType() == 1 || o.getAdvType() == 3) {
-                            Log.w(TAG, "video:" + o.getBannerVideoList().size());
-                            //查寻是否有多余视频广告
-                            List<File> vFiles = scanSDcardVideoList(Constant.VIDEOPATH);
-                            for (File f : vFiles) {
-                                boolean isFind = false;
-                                for (AdvertisementModel ad : o.getBannerVideoList()) {
-                                    if (ad.getContent().indexOf(f.getName()) >= 0) {
-                                        isFind = true;
-                                        break;
-                                    }
-                                }
-                                if (isFind) {
-                                    LogUtil.d(TAG, "本地已存在视频广告:" + f.getName());
-                                } else {
-                                    LogUtil.d(TAG, "本地多余视频广告:" + f.getName());
-                                    f.delete();
-                                }
-                            }
-                            //轮询是否有新加视频广告
-                            for (AdvertisementModel ad : o.getBannerVideoList()) {
-                                boolean isFind = false;
+        if (controlhandler != null)
+            controlhandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    deviceApi.getAd(mac, appType).enqueue(new ApiCallBack<ApiGetAdvertisement>() {
+                        @Override
+                        public void success(ApiGetAdvertisement o) {
+                            AdvType = o.getAdvType();
+                            Log.w(TAG, "getAd success AdvType=" + o.getAdvType());
+                            if (o.getAdvType() == 1 || o.getAdvType() == 3) {
+                                Log.w(TAG, "video:" + o.getBannerVideoList().size());
+                                //查寻是否有多余视频广告
+                                List<File> vFiles = scanSDcardVideoList(Constant.VIDEOPATH);
                                 for (File f : vFiles) {
-                                    if (ad.getContent().indexOf(f.getName()) >= 0) {
-                                        isFind = true;
-                                        break;
+                                    boolean isFind = false;
+                                    for (AdvertisementModel ad : o.getBannerVideoList()) {
+                                        if (ad.getContent().indexOf(f.getName()) >= 0) {
+                                            isFind = true;
+                                            break;
+                                        }
+                                    }
+                                    if (isFind) {
+                                        LogUtil.d(TAG, "本地已存在视频广告:" + f.getName());
+                                    } else {
+                                        LogUtil.d(TAG, "本地多余视频广告:" + f.getName());
+                                        f.delete();
                                     }
                                 }
-                                if (!isFind) {
-                                    LogUtil.d(TAG, "新加视频广告需要下载:" + ad.getContent());
-                                    createTask(ad.getContent(), Constant.VIDEOPATH, getNameFromUrl(ad.getContent()), ad.getMd5()).start();
-                                }
-                            }
-                        }
-                        if (o.getAdvType() == 1 || o.getAdvType() == 2) {
-                            Log.w(TAG, "photo:" + o.getBannerPicList().size());
-                            //查寻是否有多余图片广告  132
-                            List<File> PFiles = scanSDcardImageFileList(Constant.ADIMGPATH);
-                            for (File f : PFiles) {
-                                boolean isFind = false;
-                                for (AdvertisementModel ad : o.getBannerPicList()) {
-                                    if (ad.getPhoto().indexOf(f.getName()) >= 0) {
-                                        isFind = true;
-                                        break;
+                                //轮询是否有新加视频广告
+                                for (AdvertisementModel ad : o.getBannerVideoList()) {
+                                    boolean isFind = false;
+                                    for (File f : vFiles) {
+                                        if (ad.getContent().indexOf(f.getName()) >= 0) {
+                                            isFind = true;
+                                            break;
+                                        }
+                                    }
+                                    if (!isFind) {
+                                        LogUtil.d(TAG, "新加视频广告需要下载:" + ad.getContent());
+                                        createTask(ad.getContent(), Constant.VIDEOPATH, getNameFromUrl(ad.getContent()), ad.getMd5()).start();
                                     }
                                 }
-                                if (isFind) {
-                                    LogUtil.d(TAG, "本地已存在图片广告:" + f.getName());
-                                } else {
-                                    LogUtil.d(TAG, "本地多余图片广告:" + f.getName());
-                                    f.delete();
-                                }
                             }
-                            //轮询是否有新加图片广告
-                            for (AdvertisementModel ad : o.getBannerPicList()) {
-                                boolean isFind = false;
+                            if (o.getAdvType() == 1 || o.getAdvType() == 2) {
+                                Log.w(TAG, "photo:" + o.getBannerPicList().size());
+                                //查寻是否有多余图片广告  132
+                                List<File> PFiles = scanSDcardImageFileList(Constant.ADIMGPATH);
                                 for (File f : PFiles) {
-                                    if (ad.getPhoto().indexOf(f.getName()) >= 0) {
-                                        isFind = true;
-                                        break;
+                                    boolean isFind = false;
+                                    for (AdvertisementModel ad : o.getBannerPicList()) {
+                                        if (ad.getPhoto().indexOf(f.getName()) >= 0) {
+                                            isFind = true;
+                                            break;
+                                        }
+                                    }
+                                    if (isFind) {
+                                        LogUtil.d(TAG, "本地已存在图片广告:" + f.getName());
+                                    } else {
+                                        LogUtil.d(TAG, "本地多余图片广告:" + f.getName());
+                                        f.delete();
                                     }
                                 }
-                                if (!isFind) {
-                                    LogUtil.d(TAG, "新加图片广告需要下载:" + ad.getPhoto());
-                                    createTask(ad.getPhoto(), Constant.ADIMGPATH, getNameFromUrl(ad.getPhoto()), ad.getMd5()).start();
+                                //轮询是否有新加图片广告
+                                for (AdvertisementModel ad : o.getBannerPicList()) {
+                                    boolean isFind = false;
+                                    for (File f : PFiles) {
+                                        if (ad.getPhoto().indexOf(f.getName()) >= 0) {
+                                            isFind = true;
+                                            break;
+                                        }
+                                    }
+                                    if (!isFind) {
+                                        LogUtil.d(TAG, "新加图片广告需要下载:" + ad.getPhoto());
+                                        createTask(ad.getPhoto(), Constant.ADIMGPATH, getNameFromUrl(ad.getPhoto()), ad.getMd5()).start();
+                                    }
                                 }
                             }
                         }
-                    }
 
-                    @Override
-                    public void fail(int i, String s) {
-                        Log.e(TAG, "updateOnwerStatus fail :" + s);
-                    }
-                });
-            }
-        }, 2000);
+                        @Override
+                        public void fail(int i, String s) {
+                            Log.e(TAG, "updateOnwerStatus fail :" + s);
+                        }
+                    });
+                }
+            }, 2000);
 
     }
 
@@ -907,10 +940,10 @@ public class DeviceImpl implements DeviceManager {
                 public void success(ApiGetDeviceConfigModel model) {
 
                     LogUtil.e(TAG, "成功获取锁配置：锁:" + model.getLock_access() + " 门:" + model.getDoor_access() + " 原锁:" + model.getOrignal_lock_access() +
-                            " 单锁:" + (model.getLock_num() == 1) + " 锁类型:" + model.getLock_type() + " 环信账号:" + model.getEaseAccount()+ " 功能控制:" + model.getFunction()+" 蓝牙RSSI:" +model.getBraceletDistance());
-                     if(mUpdateDeviceListner != null && model.getEaseAccount() != null && model.getBraceletDistance()<0){
-                         mUpdateDeviceListner.UpdateDevice(model.getEaseAccount().toString(),model.getBraceletDistance());
-                     }
+                            " 单锁:" + (model.getLock_num() == 1) + " 锁类型:" + model.getLock_type() + " 环信账号:" + model.getEaseAccount() + " 功能控制:" + model.getFunction() + " 蓝牙RSSI:" + model.getBraceletDistance());
+                    if (mUpdateDeviceListner != null && model.getEaseAccount() != null && model.getBraceletDistance() < 0) {
+                        mUpdateDeviceListner.UpdateDevice(model.getEaseAccount().toString(), model.getBraceletDistance());
+                    }
 
                     if (enableLock) {
                         switch (model.getLock_type()) {
@@ -960,19 +993,19 @@ public class DeviceImpl implements DeviceManager {
                     }
 
                     String[] Functions = model.getFunction().split("-");
-                    for (String fun:Functions){
-                        switch(fun){
+                    for (String fun : Functions) {
+                        switch (fun) {
                             case "1"://业主开门
-                                LogUtil.w(TAG,"业主开门功能 无效");
+                                LogUtil.w(TAG, "业主开门功能 无效");
                                 break;
                             case "2"://开门拍照
-                                LogUtil.w(TAG,"开门拍照功能 无效");
+                                LogUtil.w(TAG, "开门拍照功能 无效");
                                 break;
                             case "3"://人脸识别
                                 enableFaceDetect = true;
                                 break;
                             case "4"://智能语音
-                                LogUtil.w(TAG,"智能语音功能 无效");
+                                LogUtil.w(TAG, "智能语音功能 无效");
                                 break;
                             case "5"://开门语音
                                 enableOpenVoice = true;
@@ -994,15 +1027,14 @@ public class DeviceImpl implements DeviceManager {
     };
 
 
-
     @Override
     public void setLogStrListner(LogStrListner logStrListner) {
-          this.mlogStrListner = logStrListner;
+        this.mlogStrListner = logStrListner;
     }
 
     @Override
     public void unRegLogStrListner() {
-        if(mlogStrListner != null){
+        if (mlogStrListner != null) {
             this.mlogStrListner = null;
         }
     }
@@ -1013,11 +1045,10 @@ public class DeviceImpl implements DeviceManager {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void UpdateConfigEvent(UpdateConfigEvent updateConfigEvent){
+    public void UpdateConfigEvent(UpdateConfigEvent updateConfigEvent) {
         LogUtil.e(TAG, "###UpdateConfigEvent ");
         controlhandler.post(getDeviceConfigRunnable);
     }
-
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -1026,10 +1057,11 @@ public class DeviceImpl implements DeviceManager {
             serviceOpenLockListner.lockopen(openLockRecallEvent.getOpenWay());
         }
     }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPhotoTakenEvent(PhotoTakenEvent photoTakenEvent) {
         if (photoTakenListener != null) {
-            LogUtil.w(TAG,"get onPhotoTakenEvent");
+            LogUtil.w(TAG, "get onPhotoTakenEvent");
             photoTakenListener.onTaken(photoTakenEvent.getPath());
             photoTakenListener = null;
         }
@@ -1049,19 +1081,19 @@ public class DeviceImpl implements DeviceManager {
                 break;
             }
             case "lockPush": {
-                Log.e(TAG,"###@@@@@@@@@@@@@@lockPush");
-                if(EnableUploadPush){
-                    EnableUploadPush =false;
+                Log.e(TAG, "###@@@@@@@@@@@@@@lockPush");
+                if (EnableUploadPush) {
+                    EnableUploadPush = false;
                     if (mLockPushListener != null)
                         mLockPushListener.onPush();
-                    int i=0;
-                    if (getLock()!=null) {
+                    int i = 0;
+                    if (getLock() != null) {
                         i = getLock().openLock();
                         LogUtil.e(TAG, "###result lockcode =" + i);
                         EventBus.getDefault().post(new OpenLockStatusEvent(DPDB.getUid(), true));
-                        new Handler().postDelayed(openByKeyRecordRunnable,100);
+                        new Handler().postDelayed(openByKeyRecordRunnable, 100);
                         LogUtil.e(TAG, "##上传按键开锁记录 =");
-                    }else{
+                    } else {
                         LogUtil.e(TAG, "###result getLock=null");
                     }
                     EnableUploadPush = true;
@@ -1174,8 +1206,8 @@ public class DeviceImpl implements DeviceManager {
                         }
                     }
 
-                    if(event.isBraceletUnTerminal()){
-                        if(mUpdateBracelet != null) {
+                    if (event.isBraceletUnTerminal()) {
+                        if (mUpdateBracelet != null) {
                             mUpdateBracelet.UpdateBrace();
                         }
                     }
@@ -1225,8 +1257,8 @@ public class DeviceImpl implements DeviceManager {
                         s.device().getLed().openLed(2);
                     }
                     if (enableLock) {
-                        if(getLock() != null)
-                        getLock().openLock();
+                        if (getLock() != null)
+                            getLock().openLock();
                     }
                     break;
                 }
@@ -1269,7 +1301,7 @@ public class DeviceImpl implements DeviceManager {
 //            else mServiceInfo.setText("在线  正常开锁状态");
             if (enableLock && !deviceOnline && longOpen)
                 getLock().openLock();
-                deviceOnline = true;
+            deviceOnline = true;
             offlineCount = 0;
         } else {
             if (event.getType() == ServiceEvent.DISCONNECTED)
@@ -1285,8 +1317,8 @@ public class DeviceImpl implements DeviceManager {
                 s.device().getLed().closeLed(2);
             }
             if (enableLock) {
-                if(getLock() != null)
-                getLock().longOpenLock();
+                if (getLock() != null)
+                    getLock().longOpenLock();
             }
 //            if (longOpen) mServiceInfo.setText("离线  长开锁状态");
 //            else mServiceInfo.setText("离线  正常开锁状态");
@@ -1378,6 +1410,7 @@ public class DeviceImpl implements DeviceManager {
     }
 
     private static final String INSTALL_REBOOT_ACTION = "com.dchip.install.reboot";
+
     private void installApp(final String fullPath) {
         if (updateType == 1) {
             LogUtil.w(TAG, "即时更新");
@@ -1601,5 +1634,28 @@ public class DeviceImpl implements DeviceManager {
         Log.e("cocos2d-x", "Network Type : " + strNetworkType);
 
         return strNetworkType;
+    }
+
+    private void showNormalDialog(String content) {
+        /* @setIcon 设置对话框图标
+         * @setTitle 设置对话框标题
+         * @setMessage 设置对话框消息提示
+         * setXXX方法返回Dialog对象，因此可以链式设置属性
+         */
+        final AlertDialog.Builder normalDialog = new AlertDialog.Builder(mAcitvity);
+        normalDialog.setTitle("错误");
+        normalDialog.setMessage(content);
+        normalDialog.setCancelable(false);
+        normalDialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+            @Override
+            public boolean onKey(DialogInterface dialogInterface, int i, KeyEvent keyEvent) {
+                if (keyEvent.equals(KeyEvent.KEYCODE_SEARCH)){
+                    return true;
+                }
+                return false;
+            }
+        });
+        // 显示
+        normalDialog.show();
     }
 }
