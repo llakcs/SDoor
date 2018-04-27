@@ -405,13 +405,13 @@
     <init>(java.lang.Throwable);
 }
 #环信混淆
--keep class com.hyphenate.** {*;}
--keep class com.superrtc.** {*;}
--dontwarn com.hyphenate.**
-
--keep class android.net.**{*;}
--keep class com.android.internal.http.multipart.**{*;}
--keep class org.apache.**{*;}
+#-keep class com.hyphenate.** {*;}
+#-keep class com.superrtc.** {*;}
+#-dontwarn com.hyphenate.**
+#
+#-keep class android.net.**{*;}
+#-keep class com.android.internal.http.multipart.**{*;}
+#-keep class org.apache.**{*;}
 
 #okhttputils
 -dontwarn com.zhy.http.**
@@ -424,9 +424,27 @@
 
 
 #okio
--dontwarn okio.**
--keep class okio.**{*;}
-#百度地图
--keep class com.baidu.** {*;}
--keep class vi.com.** {*;}
--dontwarn com.baidu.**
+#-dontwarn okio.**
+#-keep class okio.**{*;}
+##百度地图
+#-keep class com.baidu.** {*;}
+#-keep class vi.com.** {*;}
+#-dontwarn com.baidu.**
+
+#对外接口
+-keep class com.dchip.door.smartdoorsdk.s{*;}
+-keep class com.dchip.door.smartdoorsdk.s$*{*;}
+-keep class com.dchip.door.smartdoorsdk.utils.**{*;}
+-keep class com.dchip.door.smartdoorsdk.deviceControl.Devicelmpl{*;}
+-keep class com.dchip.door.smartdoorsdk.deviceControl.DeviceManager{*;}
+-keep class com.dchip.door.smartdoorsdk.deviceControl.interfaces.LockHandler{*;}
+-keep class com.dchip.door.smartdoorsdk.deviceControl.Listener.HumanCheckListner{*;}
+-keep class com.dchip.door.smartdoorsdk.deviceControl.Listener.ServerstatusListner{*;}
+-keep class com.dchip.door.smartdoorsdk.deviceControl.Listener.UpdateOwenerListner{*;}
+-keep class com.dchip.door.smartdoorsdk.deviceControl.Listener.UpdateBraceletListner{*;}
+-keep class com.dchip.door.smartdoorsdk.deviceControl.Listener.LockPushListener{*;}
+-keep class com.dchip.door.smartdoorsdk.deviceControl.Listener.UpdateDeviceListner{*;}
+-keep class com.dchip.door.smartdoorsdk.deviceControl.devicehandler.SteerHandler{*;}
+-keep class com.dchip.door.smartdoorsdk.player.IMPlayListener{*;}
+-keep class com.dchip.door.smartdoorsdk.player.MPlayer{*;}
+-keep class com.dchip.door.smartdoorsdk.player.IMPlayer{*;}
