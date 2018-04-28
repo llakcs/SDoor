@@ -739,6 +739,11 @@ public class DeviceImpl implements DeviceManager {
                         LogUtil.e(TAG, "服务器上不存在该版本：" + appType);
                         return;
                     }
+                    if (o.getMd5() == null) {
+                        LogUtil.e(TAG, "该版本MD5异常");
+                        EventBus.getDefault().post(new FaultEvent(5));
+                        return;
+                    }
 //                    String serverUrl = DPDB.getserverUrl();
 //                    final String url = serverUrl.substring(0, serverUrl.length() - 5) + o.getAddress();
                     final String url = o.getDetailAddress();
@@ -847,7 +852,12 @@ public class DeviceImpl implements DeviceManager {
                                     }
                                     if (!isFind) {
                                         LogUtil.d(TAG, "新加视频广告需要下载:" + ad.getContent());
-                                        createTask(ad.getContent(), Constant.VIDEOPATH, getNameFromUrl(ad.getContent()), ad.getMd5()).start();
+                                        if (ad.getMd5()!=null && !ad.getMd5().equals("")) {
+                                            createTask(ad.getContent(), Constant.VIDEOPATH, getNameFromUrl(ad.getContent()), ad.getMd5()).start();
+                                        }else{
+                                            EventBus.getDefault().post(new FaultEvent(5));
+                                            LogUtil.e(TAG, "下载异常:md5无效");
+                                        }
                                     }
                                 }
                             }
@@ -881,7 +891,12 @@ public class DeviceImpl implements DeviceManager {
                                     }
                                     if (!isFind) {
                                         LogUtil.d(TAG, "新加图片广告需要下载:" + ad.getPhoto());
-                                        createTask(ad.getPhoto(), Constant.ADIMGPATH, getNameFromUrl(ad.getPhoto()), ad.getMd5()).start();
+                                        if (ad.getMd5()!=null && !ad.getMd5().equals("")) {
+                                            createTask(ad.getPhoto(), Constant.ADIMGPATH, getNameFromUrl(ad.getPhoto()), ad.getMd5()).start();
+                                        }else{
+                                            EventBus.getDefault().post(new FaultEvent(5));
+                                            LogUtil.e(TAG, "下载异常:md5无效");
+                                        }
                                     }
                                 }
                             }
