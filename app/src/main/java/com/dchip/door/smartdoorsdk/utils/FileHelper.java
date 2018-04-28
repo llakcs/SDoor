@@ -27,7 +27,7 @@ public class FileHelper {
      * 计算文件md5 用于下载判断时候安装完成
      */
     public static String getMd5ByFile(File file) {
-        BigInteger bi = null;
+        StringBuffer sb = new StringBuffer();
         try {
             byte[] buffer = new byte[3072];
             int len = 0;
@@ -37,14 +37,15 @@ public class FileHelper {
                 md.update(buffer, 0, len);
             }
             fis.close();
-            byte[] b = md.digest();
-            bi = new BigInteger(1, b);
+            for (byte b : md.digest()) {
+                sb.append(String.format("%02x", b)); // 10进制转16进制，X 表示以十六进制形式输出，02 表示不足两位前面补0输出
+            }
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return bi.toString(16);
+        return sb.toString();
     }
 //    public static String getMd5ByFile(File file) {
 //        String value = null;
