@@ -83,6 +83,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -146,7 +147,6 @@ public class DeviceImpl implements DeviceManager {
     private int AdvType = 1;
     boolean EnableUploadPush = true;
     AlertDialog.Builder normalDialog = null;
-    Dialog dialog;
     private DeviceImpl() {
     }
 
@@ -566,18 +566,9 @@ public class DeviceImpl implements DeviceManager {
                             Log.e(TAG,"###o.intValue() == 1");
                             if (getLock()!=null){
                                 getLock().longOpenLock();
-                                Log.e(TAG,"###checkDeviceLock.开锁 ");
                             }
-                            if(!dialog.isShowing()){
-                                Log.e(TAG,"###dialog == null&&!dialog.isShowing()");
+                            if(normalDialog == null){
                                 showNormalDialog("授权超时，请联系供应商");
-                            }
-                        }else if(o.intValue() == 0){
-                            Log.e(TAG,"###o.intValue() == 0");
-                            if(normalDialog != null){
-                                if(dialog.isShowing()){
-                                    dialog.dismiss();
-                                }
                             }
                         }
                         checkDeviceLock();
@@ -1662,17 +1653,23 @@ public class DeviceImpl implements DeviceManager {
             normalDialog.setTitle("警告");
             normalDialog.setMessage(content);
             normalDialog.setCancelable(false);
-            normalDialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+            normalDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 @Override
-                public boolean onKey(DialogInterface dialogInterface, int i, KeyEvent keyEvent) {
-                    if (keyEvent.equals(KeyEvent.KEYCODE_SEARCH)) {
-                        return true;
+                public void onClick(DialogInterface dialog, int which) {
+                    try {
+                        Field field = dialog.getClass()
+                                .getSuperclass()
+                                .getDeclaredField("mShowing");
+                        field.setAccessible(true);
+                        field.set(dialog, false); // 此处设为true则可以关闭
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                    return false;
                 }
             });
             // 显示
-           dialog = normalDialog.show();
+           normalDialog.create().show();
+
 
     }
 }
