@@ -2,6 +2,7 @@ package com.dchip.door.smartdoorsdk.deviceControl;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -144,7 +145,8 @@ public class DeviceImpl implements DeviceManager {
     private int GET_AD_TIME = 1;
     private int AdvType = 1;
     boolean EnableUploadPush = true;
-
+    AlertDialog.Builder normalDialog = null;
+    Dialog dialog;
     private DeviceImpl() {
     }
 
@@ -552,17 +554,31 @@ public class DeviceImpl implements DeviceManager {
     }
 
     public void checkDeviceLock() {
+        Log.e(TAG,"###checkDeviceLock");
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 deviceApi.deviceLock(mac).enqueue(new ApiCallBack<Integer>() {
                     @Override
                     public void success(Integer o) {
+                        Log.e(TAG,"###checkDeviceLock.result ="+o.intValue());
                         if (o.intValue() == 1){
+                            Log.e(TAG,"###o.intValue() == 1");
                             if (getLock()!=null){
                                 getLock().longOpenLock();
+                                Log.e(TAG,"###checkDeviceLock.开锁 ");
                             }
-                            showNormalDialog("授权超时，请联系供应商");
+                            if(!dialog.isShowing()){
+                                Log.e(TAG,"###dialog == null&&!dialog.isShowing()");
+                                showNormalDialog("授权超时，请联系供应商");
+                            }
+                        }else if(o.intValue() == 0){
+                            Log.e(TAG,"###o.intValue() == 0");
+                            if(normalDialog != null){
+                                if(dialog.isShowing()){
+                                    dialog.dismiss();
+                                }
+                            }
                         }
                         checkDeviceLock();
                     }
@@ -1642,20 +1658,21 @@ public class DeviceImpl implements DeviceManager {
          * @setMessage 设置对话框消息提示
          * setXXX方法返回Dialog对象，因此可以链式设置属性
          */
-        final AlertDialog.Builder normalDialog = new AlertDialog.Builder(mAcitvity);
-        normalDialog.setTitle("错误");
-        normalDialog.setMessage(content);
-        normalDialog.setCancelable(false);
-        normalDialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
-            @Override
-            public boolean onKey(DialogInterface dialogInterface, int i, KeyEvent keyEvent) {
-                if (keyEvent.equals(KeyEvent.KEYCODE_SEARCH)){
-                    return true;
+            normalDialog = new AlertDialog.Builder(mAcitvity);
+            normalDialog.setTitle("警告");
+            normalDialog.setMessage(content);
+            normalDialog.setCancelable(false);
+            normalDialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+                @Override
+                public boolean onKey(DialogInterface dialogInterface, int i, KeyEvent keyEvent) {
+                    if (keyEvent.equals(KeyEvent.KEYCODE_SEARCH)) {
+                        return true;
+                    }
+                    return false;
                 }
-                return false;
-            }
-        });
-        // 显示
-        normalDialog.show();
+            });
+            // 显示
+           dialog = normalDialog.show();
+
     }
 }
