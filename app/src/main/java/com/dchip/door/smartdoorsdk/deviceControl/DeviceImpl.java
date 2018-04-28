@@ -735,7 +735,7 @@ public class DeviceImpl implements DeviceManager {
                             //删除旧apk
                             File[] fs = new File(Constant.DOWNLOAD_APK_PATH).listFiles();
                             for (File f : fs) {
-                                if (url.indexOf(f.getName()) < 0) {
+                                if (!FileHelper.getMd5ByFile(f).equals(o.getMd5())) {
                                     f.delete();
                                 }
                             }
