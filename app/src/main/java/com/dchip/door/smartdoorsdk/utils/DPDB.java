@@ -162,9 +162,6 @@ public class DPDB {
 	}
 
 
-
-
-
 	/** 获取是否播放广告 */
 	public static boolean getAdPlay() {
 		if (!isRead()) {
